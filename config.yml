@@ -1,0 +1,7 @@
+paths:
+  train: data/train
+  test: data/test
+  valid: data/valid
+training:
+  mode: categorical
+  interpolation: lanczos:random
