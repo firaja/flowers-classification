@@ -8,6 +8,8 @@ from keras.layers import GlobalAveragePooling2D, Dropout, Dense, Flatten
 from keras_applications.resnext import ResNeXt50, preprocess_input
 from keras_efficientnets import EfficientNetB4
 from keras import backend as K
+from keras.optimizers import Adam, SGD
+
 
 WEIGHTS='imagenet'
 ACTIVATION = 'softmax'
@@ -16,7 +18,14 @@ ACTIVATION = 'softmax'
 ARCHITECTURES = {
     'densenet121': {'size': 224, 'get': lambda d : lambda : efficientnetb4(d)}, 
     'efficientnetb4': {'size': 380, 'get': lambda d : lambda : efficientnetb4(d)}, 
-    'resnet18': {'size': 224, 'get': lambda d : lambda : resnet18(d)}}
+    'resnet18': {'size': 224, 'get': lambda d : lambda : resnet18(d)}
+    }
+
+OPTIMIZERS = {
+    'Adam': {'get': lambda : lambda : Adam(learning_rate=0.01)}, 
+    'SGD': {'get': lambda : lambda : SGD(learning_rate=0.01, momentum=0.9)}
+    }
+
 
 def densenet121(dropout):
     densenet = DenseNet121(weights=WEIGHTS, include_top=False, input_shape=(224, 224, 3))
@@ -30,7 +39,7 @@ def densenet121(dropout):
 
 
 def efficientnetb4(dropout):
-    efficientnet = EfficientNetB4(weights=WEIGHTS, include_top=False, input_shape=(380, 380, 3), backend=keras.backend, layers=keras.layers, models=keras.models, utils=keras.utils)
+    efficientnet = EfficientNetB4(weights=WEIGHTS, include_top=False, input_shape=(380, 380, 3))
 
     model = Sequential()
     model.add(efficientnet)

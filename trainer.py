@@ -4,7 +4,7 @@ import models
 import processing
 import yaml
     
-OPTIMIZERS = ['Adam', 'SGD']
+
 
 CLRS = ['triangular', 'triangular2', 'exp']
 
@@ -20,7 +20,7 @@ def parse_arguments():
 
     parser.add_argument('--batch', type=int, const=32, default=32, nargs='?', help='Batch size used during training')
     parser.add_argument('--arch', type=str, const='densenet121', default='densenet121', nargs='?', choices=models.ARCHITECTURES.keys(), help='Architecture')
-    parser.add_argument('--opt', type=str, const='Adam', default='Adam', nargs='?', choices=OPTIMIZERS, help='Optimizer')
+    parser.add_argument('--opt', type=str, const='Adam', default='Adam', nargs='?', choices=models.OPTIMIZERS.keys(), help='Optimizer')
     parser.add_argument('--clr', type=str, const='triangular2', default='triangular2', nargs='?', choices=CLRS, help='Cyclical learning rate')
     parser.add_argument('--step', type=float, const=0.001, default=0.001, nargs='?', help='Step size')
     parser.add_argument('--dropout', type=float, const=0.5, default=0.5, nargs='?', help='Dropout rate')
@@ -31,16 +31,16 @@ def parse_arguments():
 
 if __name__ == '__main__':
     args = parse_arguments()
-
-    print(args)
-
-    architecture = models.ARCHITECTURES[args.arch]
-
     config = read_configuration(args.config)
 
-    print(config)
 
+    architecture = models.ARCHITECTURES[args.arch]
+    
+    model = architecture['get'](args.dropout)()
+    
     target_size = architecture['size']
+    
+    optimizer = models.OPTIMIZERS[args.opt]['get']()()
 
     train_generator = processing.train_data_generator().flow_from_directory(directory=get_path(config['paths']['train']),
                                                                             batch_size=args.batch,
@@ -60,3 +60,5 @@ if __name__ == '__main__':
                                                                             shuffle=False,
                                                                             target_size=(target_size, target_size),
                                                                             class_mode=config['training']['mode'])
+
+    model.compile(loss=config['training']['loss'], optimizer=optimizer, metrics=['acc'])

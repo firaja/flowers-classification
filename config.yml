@@ -5,3 +5,4 @@ paths:
 training:
   mode: categorical
   interpolation: lanczos:random
+  loss: categorical_crossentropy
