@@ -13,6 +13,8 @@ def train_data_generator():
         horizontal_flip=True,
         brightness_range=[0.7, 1.3],
         rotation_range=10,
+        #zoom_range = 0.1,
+        #fill_mode = 'reflect',
         preprocessing_function=pre_processing)
 
 

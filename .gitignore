@@ -2,3 +2,5 @@ __pycache__
 data/train
 data/test
 data/valid
+output/checkpoints
+~/

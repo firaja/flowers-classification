@@ -2,7 +2,15 @@ paths:
   train: data/train
   test: data/test
   valid: data/valid
+  checkpoint:
+    loss: output/checkpoints/{}-loss.h5
+    accuracy: output/checkpoints/{}-accuracy.h5
+  plot:
+    base: output/plots/{}
+    loss: output/plots/{}/loss_b{}_s{}_o{}_c{}.png
+    accuracy: output/plots/{}/accuracy_b{}_s{}_o{}_c{}.png
+    lr: output/plots/lr.png
 training:
   mode: categorical
-  interpolation: lanczos:random
-  loss: categorical_crossentropy
+  interpolation: nearest
+  loss: sparse_categorical_crossentropy

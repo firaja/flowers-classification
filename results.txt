@@ -1,0 +1,42 @@
+accuracy	resnet18	64	8	Adam	triangular2	0.9767726063728333
+loss	resnet18	64	8	Adam	triangular2	0.09657665342092514
+
+accuracy	resnet18	64	2.0	Adam	triangular	0.9584352374076843
+loss	resnet18	64	2.0	Adam	triangular	0.15426921844482422
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.92665034532547
+loss	resnet18	64	2.0	SGD	triangular	0.3249775171279907
+
+accuracy	resnet18	64	4.0	SGD	triangular2	0.815403401851654
+loss	resnet18	64	4.0	SGD	triangular2	0.8504511117935181
+
+accuracy	resnet18	64	8.0	SGD	triangular	0.9278728365898132
+loss	resnet18	64	8.0	SGD	triangular	0.33207571506500244
+
+accuracy	inceptionv3	64	4.0	SGD	triangular2	0.9413203001022339
+loss	inceptionv3	64	4.0	SGD	triangular2	0.2711341083049774
+
+accuracy	resnet18	64	8	SGD	triangular2	0.9339853525161743
+loss	resnet18	64	8	SGD	triangular2	0.2786838114261627
+
+accuracy	resnet18	64	8	SGD	triangular2	0.050122249871492386
+loss	resnet18	64	8	SGD	triangular2	4.483453750610352
+
+accuracy	mobilenet	32	8	Adam	triangular2	0.07254902273416519
+loss	mobilenet	32	8	Adam	triangular2	4.211770534515381
+
+accuracy	mobilenet	32	8	Adam	triangular2	0.8156862854957581
+loss	mobilenet	32	8	Adam	triangular2	0.771356999874115
+
+accuracy	resnet18	32	2.0	SGD	triangular2	0.9278728365898132
+loss	resnet18	32	2.0	SGD	triangular2	0.3572586476802826
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.9828850626945496
+loss	resnet18	64	2.0	SGD	triangular	0.10322060436010361
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.9743276238441467
+loss	resnet18	64	2.0	SGD	triangular	0.1025281473994255
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.9441176652908325
+loss	resnet18	64	2.0	SGD	triangular	0.21360889077186584
+
