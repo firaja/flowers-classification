@@ -82,3 +82,6 @@ loss	resnet18	64	2.0	SGD	triangular	0.23030689358711243
 accuracy	resnet18	64	2.0	SGD	triangular	0.9460784196853638
 loss	resnet18	64	2.0	SGD	triangular	0.21895365417003632
 
+accuracy	inceptionv3	64	8	SGD	triangular	0.9156862497329712
+loss	inceptionv3	64	8	SGD	triangular	0.3191291093826294
+

@@ -21,13 +21,6 @@ tf.random.set_seed(42)
 CLRS = ['triangular', 'triangular2', 'exp']
 
 EPOCHS = 50
-TF_AUTOTUNE = tf.data.experimental.AUTOTUNE
-SHUFFLE_BUFFER_SIZE = 473
-
-def parse_image(features):
-    image = features['image']
-    image = tf.image.resize(image, (224, 224)) / 255.0
-    return image, features['label']
 
 
 def parse_arguments():
@@ -40,6 +33,8 @@ def parse_arguments():
     parser.add_argument('--step', type=float, const=8, default=8, nargs='?', help='Step size')
     parser.add_argument('--dropout', type=float, const=0.5, default=0.5, nargs='?', help='Dropout rate')
     parser.add_argument('--config', type=str, const='config.yml', default='config.yml', nargs='?', help='Configuration file')
+    parser.add_argument('--mp', default=False, action='store_true', help='Enable mixed precision operations (16bit-32bit)')
+
     
     return parser.parse_args()
 
@@ -48,21 +43,29 @@ if __name__ == '__main__':
     args = parse_arguments()
     config = utils.read_configuration(args.config)
 
+    # Do not allocate all the memory during initialization
     gpus = tf.config.experimental.list_physical_devices('GPU')
     for gpu in gpus:
         tf.config.experimental.set_memory_growth(gpu, True)
 
+    # Enable 16bit operations
+    if args.mp:
+        policy = tf.keras.mixed_precision.Policy('mixed_float16')
+        tf.keras.mixed_precision.set_global_policy(policy)
+        print('Mixed precision enabled!')
+        print('Operations dtype: {}'.format(policy.compute_dtype))
+        print('Variables dtype: {}'.format(policy.variable_dtype))
+    
+    # Get the model
     architecture = models.ARCHITECTURES[args.arch]
-    
     model = architecture(args.dropout).get_model()
-    
     target_size = architecture.size
 
 
-    
+    # Get the optimizer
     optimizer = models.OPTIMIZERS[args.opt]['get']()()
 
-
+    # Download and preprocess the dataset with data augmentation
     train_preprocessed, test_preprocessed, validation_preprocessed, train_cardinality, validation_cardinality = Processing(target_size=target_size,
                                                                                                                             batch_size=args.batch,
                                                                                                                             shuffle=True, 
@@ -70,10 +73,11 @@ if __name__ == '__main__':
                                                                                                                             flip=False, 
                                                                                                                             rotation=0).get_dataset()
 
-
     
+    # Finalize the model
     model.compile(loss=config['training']['loss'], optimizer=optimizer, metrics=['acc'])
 
+    # Checkpoints
     mcp_save_acc = ModelCheckpoint(utils.get_path(config['paths']['checkpoint']['accuracy'].format(args.arch)),
                                    save_best_only=True,
                                    monitor='val_acc', mode='max')
@@ -81,17 +85,20 @@ if __name__ == '__main__':
                                     save_best_only=True,
                                     monitor='val_loss', mode='min')
 
-    step_size_train = np.ceil(train_cardinality / args.batch)
-    step_size_valid = np.ceil(validation_cardinality / args.batch)
+    
 
     # Define how many iterations are required to complete a learning rate cycle
+    step_size_train = np.ceil(train_cardinality / args.batch)
+    step_size_valid = np.ceil(validation_cardinality / args.batch)
     stepSize = args.step * step_size_train
 
+    # Define the Cyclic Learnin Rate
     clr = CyclicLR(mode=args.clr, 
                     base_lr=1e-4, 
                     max_lr=1e-2, 
                     step_size=stepSize)
 
+    # Defien the Early Stopping strategy
     es = EarlyStopping(monitor='val_loss', 
                         patience=20, 
                         mode='min', 
@@ -99,6 +106,7 @@ if __name__ == '__main__':
                         min_delta=0.005,
                         verbose=1)
 
+    # Train
     history = model.fit(train_preprocessed,
                                   epochs=EPOCHS,
                                   verbose=1,

@@ -1,16 +1,16 @@
 import tensorflow.keras
 from classification_models.keras import Classifiers
 from tensorflow.keras import Sequential, Model
-from tensorflow.keras.applications import DenseNet121
-from tensorflow.keras.applications import InceptionV3
+from tensorflow.keras.applications import DenseNet121, InceptionV3
+from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.callbacks import Callback
 from sklearn.metrics import cohen_kappa_score
-from tensorflow.keras.layers import GlobalAveragePooling2D, Dropout, Dense, Flatten, BatchNormalization, Activation
+from tensorflow.keras.layers import GlobalAveragePooling2D, Dropout, Dense, Flatten, BatchNormalization, Activation, Conv2D, MaxPool2D, GlobalMaxPool2D
 from keras_applications.resnext import ResNeXt50, preprocess_input
 from keras_efficientnets import EfficientNetB4
-from tensorflow.keras.layers import Conv2D
 from tensorflow.keras import backend as K
 from tensorflow.keras.optimizers import Adam, SGD
+from tensorflow.keras.applications.vgg16 import VGG16
 import sys, inspect
 
 
@@ -30,17 +30,18 @@ def last_conv(model):
     
 
 
-class Densenet121 :
+class Vgg16 :
 
     size = 224
 
     def __init__(self, dropout):
-        densenet = DenseNet121(weights=WEIGHTS, include_top=False, input_shape=(self.size, self.size, 3))
+        vgg16 = VGG16(weights=WEIGHTS, include_top=False, input_shape=(self.size, self.size, 3))
 
-        output = GlobalAveragePooling2D()(densenet.output)
+        output = GlobalAveragePooling2D()(vgg16.output)
         output = Dropout(dropout)(output)
-        output = Dense(102, activation=ACTIVATION)(output)
-        self.model = Model(inputs=densenet.input, outputs=output)
+        output = Dense(102)(output)
+        output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
+        self.model = Model(inputs=vgg16.input, outputs=output)
 
     def get_model(self):
         return self.model
@@ -58,7 +59,8 @@ class Efficientnetb4:
 
         output = GlobalAveragePooling2D()(efficientnet.output)
         output = Dropout(dropout)(output)
-        output = Dense(102, activation=ACTIVATION)(output)
+        output = Dense(102)(output)
+        output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
         self.model = Model(inputs=efficientnet.input, outputs=output)
 
     def get_model(self):
@@ -79,6 +81,7 @@ class Resnet18:
         output = GlobalAveragePooling2D()(base_model.output)
         output = Dropout(dropout)(output)
         output = Dense(102, activation=ACTIVATION)(output)
+        output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
         self.model = Model(inputs=base_model.input, outputs=output)
 
     def get_model(self):
@@ -87,19 +90,17 @@ class Resnet18:
     def get_last_conv(self):
         return last_conv(self.model)
 
-class MobileNet:
+class Resnet50:
     size = 224
 
     def __init__(self, dropout):
-        resnet, _ = Classifiers.get('resnet18')
-        base_model = resnet(input_shape=(self.size, self.size, 3), include_top=False, weights=WEIGHTS)
-        base_model.trainable = False
-        model = Sequential()
-        model.add(base_model)
-        model.add(GlobalAveragePooling2D())
-        model.add(Dropout(dropout))
-        model.add(Dense(102, activation=ACTIVATION))
-        self.model = model
+        resnet = ResNet50(weights=WEIGHTS, include_top=False, input_shape=(self.size, self.size, 3))
+
+        output = GlobalAveragePooling2D()(resnet.output)
+        output = Dropout(dropout)(output)
+        output = Dense(102)(output)
+        output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
+        self.model = Model(inputs=resnet.input, outputs=output)
 
     def get_model(self):
         return self.model
@@ -107,19 +108,18 @@ class MobileNet:
     def get_last_conv(self):
         return last_conv(self.model)
 
+
 class Inceptionv3:
 
     size = 224
 
     def __init__(self, dropout):
         inceptionV3 = InceptionV3(weights=WEIGHTS, include_top=False)
-        inceptionV3.trainable = False
+
         output = GlobalAveragePooling2D()(inceptionV3.output)
-        output = Dense(512)(output)
-        output = BatchNormalization()(output)
-        output = Activation('relu')(output)
         output = Dropout(dropout)(output)
-        output = Dense(102, activation=ACTIVATION)(output)
+        output = Dense(102)(output)
+        output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
         self.model = Model(inputs=inceptionV3.input, outputs=output)
 
     def get_model(self):
