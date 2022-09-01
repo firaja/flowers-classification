@@ -8,7 +8,7 @@ import tensorflow as tf
 import tempfile
 import argparse
 import utils
-import processing
+from processing import Processing
 import models
 
 CLRS = ['triangular', 'triangular2', 'exp']
@@ -176,22 +176,24 @@ if __name__ == '__main__':
     target_size = architecture.size
     optimizer = models.OPTIMIZERS[args.opt]['get']()()
 
-    train_generator = processing.train_data_generator().flow_from_directory(directory=utils.get_path(config['paths']['train']),
-                                                                            batch_size=args.batch,
-                                                                            shuffle=True,
-                                                                            target_size=(target_size, target_size),
-                                                                            interpolation=config['training']['interpolation'],
-                                                                            class_mode=config['training']['mode'])
+    train_preprocessed, _, _, train_cardinality, _ = Processing(target_size=target_size,
+                                                                batch_size=args.batch,
+                                                                shuffle=True, 
+                                                                brightness_delta=0, 
+                                                                flip=False, 
+                                                                rotation=0).get_dataset()
+
+    step_size_train = np.ceil(train_cardinality / args.batch)
 
     model.compile(loss=config['training']['loss'], optimizer=optimizer, metrics=['acc'])
 
     print("[INFO] finding learning rate...")
     lrf = LearningRateFinder(model)
     lrf.find(
-        train_generator,
+        train_preprocessed,
         1e-10, 1e-1,
         epochs=None,
-        stepsPerEpoch=np.ceil((train_generator.n / float(args.batch))),
+        stepsPerEpoch=step_size_train,
         batchSize=args.batch,
         use_multiprocessing=False)
 

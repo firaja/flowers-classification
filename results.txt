@@ -40,3 +40,45 @@ loss	resnet18	64	2.0	SGD	triangular	0.1025281473994255
 accuracy	resnet18	64	2.0	SGD	triangular	0.9441176652908325
 loss	resnet18	64	2.0	SGD	triangular	0.21360889077186584
 
+accuracy	resnet18	64	2.0	SGD	triangular	0.006009615492075682
+loss	resnet18	64	2.0	SGD	triangular	4.829782485961914
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.9441176652908325
+loss	resnet18	64	2.0	SGD	triangular	0.22036033868789673
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.046875
+loss	resnet18	64	2.0	SGD	triangular	4.758589267730713
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.0078125
+loss	resnet18	64	2.0	SGD	triangular	4.842843055725098
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.0390625
+loss	resnet18	64	2.0	SGD	triangular	4.98467493057251
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.0078125
+loss	resnet18	64	2.0	SGD	triangular	4.980879783630371
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.0078125
+loss	resnet18	64	2.0	SGD	triangular	4.984668731689453
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.046875
+loss	resnet18	64	2.0	SGD	triangular	4.633106708526611
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.046875
+loss	resnet18	64	2.0	SGD	triangular	4.674479961395264
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.046875
+loss	resnet18	64	2.0	SGD	triangular	4.667172431945801
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.046875
+loss	resnet18	64	2.0	SGD	triangular	4.6941375732421875
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.046875
+loss	resnet18	64	2.0	SGD	triangular	4.7444658279418945
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.9431372284889221
+loss	resnet18	64	2.0	SGD	triangular	0.23030689358711243
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.9460784196853638
+loss	resnet18	64	2.0	SGD	triangular	0.21895365417003632
+

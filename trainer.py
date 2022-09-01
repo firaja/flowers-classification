@@ -11,7 +11,7 @@ import tensorflow as tf
 from clr_callback import CyclicLR
 import tensorflow_datasets as tfds
 import tensorflow_hub as hub
-
+from processing import Processing
 
 np.random.seed(42)
 tf.random.set_seed(42)
@@ -63,37 +63,15 @@ if __name__ == '__main__':
     optimizer = models.OPTIMIZERS[args.opt]['get']()()
 
 
-
-    splits = ['test', 'validation', 'train']
-    splits, ds_info = tfds.load('oxford_flowers102', split=splits, with_info=True)
-    (ds_train, ds_validation, ds_test) = splits
-
-    train_preprocessed = ds_train.shuffle(SHUFFLE_BUFFER_SIZE).map(parse_image, num_parallel_calls=TF_AUTOTUNE).cache().batch(args.batch).prefetch(TF_AUTOTUNE)
-
-    test_preprocessed = ds_test.map(parse_image, num_parallel_calls=TF_AUTOTUNE).cache().batch(args.batch).prefetch(TF_AUTOTUNE)
-
-    validation_preprocessed = ds_validation.map(parse_image, num_parallel_calls=TF_AUTOTUNE).cache().batch(args.batch).prefetch(TF_AUTOTUNE)
+    train_preprocessed, test_preprocessed, validation_preprocessed, train_cardinality, validation_cardinality = Processing(target_size=target_size,
+                                                                                                                            batch_size=args.batch,
+                                                                                                                            shuffle=True, 
+                                                                                                                            brightness_delta=0, 
+                                                                                                                            flip=False, 
+                                                                                                                            rotation=0).get_dataset()
 
 
-    train_generator = processing.train_data_generator().flow_from_directory(directory=utils.get_path(config['paths']['train']),
-                                                                            batch_size=args.batch,
-                                                                            shuffle=True,
-                                                                            target_size=(target_size, target_size),
-                                                                            interpolation=config['training']['interpolation'],
-                                                                            class_mode=config['training']['mode'])
-
-    valid_generator = processing.test_data_generator().flow_from_directory(directory=utils.get_path(config['paths']['valid']),
-                                                                            batch_size=args.batch,
-                                                                            shuffle=True,
-                                                                            target_size=(target_size, target_size),
-                                                                            class_mode=config['training']['mode'])
-
-    test_generator = processing.test_data_generator().flow_from_directory(directory=utils.get_path(config['paths']['test']),
-                                                                            batch_size=args.batch,
-                                                                            shuffle=False,
-                                                                            target_size=(target_size, target_size),
-                                                                            class_mode=config['training']['mode'])
-
+    
     model.compile(loss=config['training']['loss'], optimizer=optimizer, metrics=['acc'])
 
     mcp_save_acc = ModelCheckpoint(utils.get_path(config['paths']['checkpoint']['accuracy'].format(args.arch)),
@@ -103,9 +81,8 @@ if __name__ == '__main__':
                                     save_best_only=True,
                                     monitor='val_loss', mode='min')
 
-    
-    step_size_train = np.ceil(train_generator.n / train_generator.batch_size)
-    step_size_valid = np.ceil(valid_generator.n / valid_generator.batch_size)
+    step_size_train = np.ceil(train_cardinality / args.batch)
+    step_size_valid = np.ceil(validation_cardinality / args.batch)
 
     # Define how many iterations are required to complete a learning rate cycle
     stepSize = args.step * step_size_train
@@ -116,7 +93,7 @@ if __name__ == '__main__':
                     step_size=stepSize)
 
     es = EarlyStopping(monitor='val_loss', 
-                        patience=EPOCHS//2, 
+                        patience=20, 
                         mode='min', 
                         #restore_best_weights=True, 
                         min_delta=0.005,
@@ -125,9 +102,9 @@ if __name__ == '__main__':
     history = model.fit(train_preprocessed,
                                   epochs=EPOCHS,
                                   verbose=1,
-                                  #steps_per_epoch=step_size_train,
+                                  steps_per_epoch=step_size_train,
                                   validation_data=validation_preprocessed,
-                                  #validation_steps=step_size_valid,
+                                  validation_steps=step_size_valid,
                                   callbacks=[es, clr, mcp_save_acc, mcp_save_loss],
                                   #workers=64,
                                   #use_multiprocessing=False,

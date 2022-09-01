@@ -71,10 +71,37 @@ class GradCAM:
 	def overlay_heatmap(self, heatmap, image, alpha):
 		
 		jet_heatmap = np.uint8(cm.jet(heatmap)[..., :3] * 255)
-		heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_MAGMA)
 		output = cv2.addWeighted(image, alpha, jet_heatmap, 1 - alpha, 0)
 		return (jet_heatmap, output)
 
+
+class SaliencyMap:
+
+	def get_saliency_map(self, model, image, class_idx):
+		
+		with tf.GradientTape() as tape:
+			inputs =  tf.Variable(image, dtype=float)
+			tape.watch(inputs)
+			predictions = model(inputs)
+
+			loss = predictions[:, class_idx]
+
+			# Get the gradients of the loss w.r.t to the input image.
+			gradient = tape.gradient(loss, inputs)
+			gradient = tf.math.abs(gradient)
+
+			# take maximum across channels
+			gradient = tf.reduce_max(gradient, axis=-1)
+
+			# convert to numpy
+			gradient = gradient.numpy()
+
+			# normaliz between 0 and 1
+			min_val, max_val = np.min(gradient), np.max(gradient)
+			smap = (gradient - min_val) / (max_val - min_val + keras.backend.epsilon())
+
+			jet_saliency = np.uint8(cm.jet(smap[0])[..., :3] * 255)
+			return jet_saliency
 
 if __name__ == '__main__':
 	args = parse_arguments()
@@ -94,7 +121,7 @@ if __name__ == '__main__':
 
 	img_path = utils.get_path('/home/firaja/Downloads/moon.jpg')
 	image = cv2.imread(img_path)	
-
+	image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 	image = cv2.resize(image, (target_size, target_size))
 	image = tf.expand_dims(image, axis=-1)
 	image = tf.divide(image, 255)
@@ -110,14 +137,20 @@ if __name__ == '__main__':
 	for i in indexes:
 		print('{}({}): {}'.format(utils.LABELS[i], i+1, predictions[i]))
 
-	icam = GradCAM(model, np.argmax(predictions), None) 
+	icam = GradCAM(model, np.argmax(predictions), None)
 	heatmap = icam.compute_heatmap(image)
 	heatmap = cv2.resize(heatmap, (target_size, target_size))
 
+	smap = SaliencyMap().get_saliency_map(model, image, np.argmax(predictions)) 
+
 	image = cv2.imread(img_path)
 	image = cv2.resize(image, (target_size, target_size))
+	image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-	(heatmap, output) = icam.overlay_heatmap(heatmap, image, 0.3)
+
+	(heatmap, output) = icam.overlay_heatmap(heatmap, image, 0.4)
+
+	
 
 
 	fig, ax = plt.subplots(1, 3)
@@ -126,4 +159,12 @@ if __name__ == '__main__':
 	ax[0].imshow(heatmap)
 	ax[1].imshow(image)
 	ax[2].imshow(output)
+	#ax[3].imshow(smap)
+	plt.show()
+
+
+	fig, axes = plt.subplots(1,2,figsize=(14,5))
+	axes[0].imshow(image)
+	i = axes[1].imshow(smap,alpha=0.8)
+	fig.colorbar(i)
 	plt.show()

@@ -1,7 +1,4 @@
 paths:
-  train: data/train
-  test: data/test
-  valid: data/valid
   checkpoint:
     loss: output/checkpoints/{}-loss.h5
     accuracy: output/checkpoints/{}-accuracy.h5
@@ -11,6 +8,6 @@ paths:
     accuracy: output/plots/{}/accuracy_b{}_s{}_o{}_c{}.png
     lr: output/plots/lr.png
 training:
+  dataset: oxford_flowers102
   mode: categorical
-  interpolation: nearest
   loss: sparse_categorical_crossentropy
