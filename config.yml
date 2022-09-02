@@ -4,8 +4,8 @@ paths:
     accuracy: output/checkpoints/{}-accuracy.h5
   plot:
     base: output/plots/{}
-    loss: output/plots/{}/loss_b{}_s{}_o{}_c{}.png
-    accuracy: output/plots/{}/accuracy_b{}_s{}_o{}_c{}.png
+    loss: output/plots/{}/loss_b{}_s{}_o{}_c{}_a{}.png
+    accuracy: output/plots/{}/accuracy_b{}_s{}_o{}_c{}_a{}.png
     lr: output/plots/lr.png
 training:
   dataset: oxford_flowers102

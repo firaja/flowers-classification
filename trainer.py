@@ -20,7 +20,6 @@ tf.random.set_seed(42)
 
 CLRS = ['triangular', 'triangular2', 'exp']
 
-EPOCHS = 50
 
 
 def parse_arguments():
@@ -34,6 +33,8 @@ def parse_arguments():
     parser.add_argument('--dropout', type=float, const=0.5, default=0.5, nargs='?', help='Dropout rate')
     parser.add_argument('--config', type=str, const='config.yml', default='config.yml', nargs='?', help='Configuration file')
     parser.add_argument('--mp', default=False, action='store_true', help='Enable mixed precision operations (16bit-32bit)')
+    parser.add_argument('--da', default=False, action='store_true', help='Enable Data Augmentation')
+    parser.add_argument('--epoch', type=int, const=50, default=50, nargs='?', help='Set the number of epochs')
 
     
     return parser.parse_args()
@@ -64,14 +65,23 @@ if __name__ == '__main__':
 
     # Get the optimizer
     optimizer = models.OPTIMIZERS[args.opt]['get']()()
+    learning_rate = models.OPTIMIZERS[args.opt]['lr']
 
     # Download and preprocess the dataset with data augmentation
-    train_preprocessed, test_preprocessed, validation_preprocessed, train_cardinality, validation_cardinality = Processing(target_size=target_size,
-                                                                                                                            batch_size=args.batch,
-                                                                                                                            shuffle=True, 
-                                                                                                                            brightness_delta=0, 
-                                                                                                                            flip=False, 
-                                                                                                                            rotation=0).get_dataset()
+    p = None
+    if args.da:
+        p = Processing(target_size=target_size,
+                        batch_size=args.batch,
+                        shuffle=True)
+    # or without data augmentation
+    else:
+        p = Processing(target_size=target_size,
+                        batch_size=args.batch,
+                        shuffle=True, 
+                        brightness_delta=0, 
+                        flip=False, 
+                        rotation=0)
+    train_preprocessed, test_preprocessed, validation_preprocessed, train_cardinality, validation_cardinality = p.get_dataset()
 
     
     # Finalize the model
@@ -94,13 +104,13 @@ if __name__ == '__main__':
 
     # Define the Cyclic Learnin Rate
     clr = CyclicLR(mode=args.clr, 
-                    base_lr=1e-4, 
-                    max_lr=1e-2, 
+                    base_lr=learning_rate[0], 
+                    max_lr=learning_rate[1],
                     step_size=stepSize)
 
     # Defien the Early Stopping strategy
     es = EarlyStopping(monitor='val_loss', 
-                        patience=20, 
+                        patience=10, 
                         mode='min', 
                         #restore_best_weights=True, 
                         min_delta=0.005,
@@ -108,12 +118,12 @@ if __name__ == '__main__':
 
     # Train
     history = model.fit(train_preprocessed,
-                                  epochs=EPOCHS,
+                                  epochs=args.epoch,
                                   verbose=1,
                                   steps_per_epoch=step_size_train,
                                   validation_data=validation_preprocessed,
                                   validation_steps=step_size_valid,
-                                  callbacks=[es, clr, mcp_save_acc, mcp_save_loss],
+                                  callbacks=[clr]#, mcp_save_acc, mcp_save_loss],
                                   #workers=64,
                                   #use_multiprocessing=False,
                                   #max_queue_size=32
@@ -129,7 +139,7 @@ if __name__ == '__main__':
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
-    plt.savefig(utils.get_path(config['paths']['plot']['accuracy'].format(args.arch, args.batch, args.step, args.opt, args.clr)))
+    plt.savefig(utils.get_path(config['paths']['plot']['accuracy'].format(args.arch, args.batch, args.step, args.opt, args.clr, args.da)))
 
     plt.clf()
 
@@ -140,7 +150,7 @@ if __name__ == '__main__':
     plt.ylabel('Loss')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper right')
-    plt.savefig(utils.get_path(config['paths']['plot']['loss'].format(args.arch, args.batch, args.step, args.opt, args.clr)))
+    plt.savefig(utils.get_path(config['paths']['plot']['loss'].format(args.arch, args.batch, args.step, args.opt, args.clr, args.da)))
 
 
 

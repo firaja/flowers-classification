@@ -21,8 +21,14 @@ ACTIVATION = 'softmax'
 ARCHITECTURES = {}
 
 OPTIMIZERS = {
-    'Adam': {'get': lambda : lambda : Adam(learning_rate=0.001)}, 
-    'SGD': {'get': lambda : lambda : SGD(learning_rate=0.001, momentum=0.9)}
+    'Adam': {
+        'get': lambda : lambda : Adam(learning_rate=1e-6),
+        'lr': [1e-6, 5e-4]
+    }, 
+    'SGD': {
+        'get': lambda : lambda : SGD(learning_rate=0.001, momentum=0.9),
+        'lr': [1e-5, 1e-3]
+        }
     }
 
 def last_conv(model):
