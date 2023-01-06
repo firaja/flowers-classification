@@ -46,3 +46,33 @@ loss	resnet18	16	4.0	SGD	triangular	4.591759204864502
 accuracy	resnet18	16	4.0	SGD	triangular	0.04313725605607033
 loss	resnet18	16	4.0	SGD	triangular	4.592872142791748
 
+accuracy	inceptionv3	16	2.0	SGD	triangular	0.906862735748291
+loss	inceptionv3	16	2.0	SGD	triangular	0.33580684661865234
+
+accuracy	inceptionv3	16	2.0	SGD	triangular	0.9156862497329712
+loss	inceptionv3	16	2.0	SGD	triangular	0.31881991028785706
+
+accuracy	inceptionv3	16	2.0	Adam	triangular	0.9401960968971252
+loss	inceptionv3	16	2.0	Adam	triangular	0.2537413239479065
+
+accuracy	inceptionv3	16	2.0	Adam	triangular	0.9382352828979492
+loss	inceptionv3	16	2.0	Adam	triangular	0.23544684052467346
+
+accuracy	inceptionv3	16	4.0	SGD	triangular	0.9039215445518494
+loss	inceptionv3	16	4.0	SGD	triangular	0.37610429525375366
+
+accuracy	inceptionv3	16	4.0	SGD	triangular	0.8950980305671692
+loss	inceptionv3	16	4.0	SGD	triangular	0.393987774848938
+
+accuracy	inceptionv3	16	4.0	Adam	triangular	0.9313725233078003
+loss	inceptionv3	16	4.0	Adam	triangular	0.313821941614151
+
+accuracy	inceptionv3	16	4.0	Adam	triangular	0.906862735748291
+loss	inceptionv3	16	4.0	Adam	triangular	0.4383770823478699
+
+accuracy	inceptionv3	16	8	Adam	triangular	0.9392156600952148
+loss	inceptionv3	16	8	Adam	triangular	0.25803864002227783
+
+accuracy	inceptionv3	16	8	Adam	triangular	0.9490196108818054
+loss	inceptionv3	16	8	Adam	triangular	0.2190467119216919
+

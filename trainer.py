@@ -60,6 +60,7 @@ if __name__ == '__main__':
     # Get the model
     architecture = models.ARCHITECTURES[args.arch]
     model = architecture(args.dropout).get_model()
+    model.summary()
     target_size = architecture.size
 
 
@@ -86,6 +87,8 @@ if __name__ == '__main__':
     
     # Finalize the model
     model.compile(loss=config['training']['loss'], optimizer=optimizer, metrics=['acc'])
+
+    #model.summary()
 
     # Checkpoints
     mcp_save_acc = ModelCheckpoint(utils.get_path(config['paths']['checkpoint']['accuracy'].format(args.arch)),
@@ -120,10 +123,10 @@ if __name__ == '__main__':
     history = model.fit(train_preprocessed,
                                   epochs=args.epoch,
                                   verbose=1,
-                                  steps_per_epoch=step_size_train,
+                                  #steps_per_epoch=step_size_train,
                                   validation_data=validation_preprocessed,
-                                  validation_steps=step_size_valid,
-                                  callbacks=[clr]#, mcp_save_acc, mcp_save_loss],
+                                  #validation_steps=step_size_valid,
+                                  callbacks=[clr, mcp_save_acc, mcp_save_loss],
                                   #workers=64,
                                   #use_multiprocessing=False,
                                   #max_queue_size=32

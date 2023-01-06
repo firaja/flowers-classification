@@ -110,7 +110,7 @@ if __name__ == '__main__':
 	preprocess_input = keras.applications.xception.preprocess_input
 	decode_predictions = keras.applications.xception.decode_predictions
 
-	class_model = models.Resnet18(0.5)
+	class_model = models.Inceptionv3(0.5)
 	model = class_model.get_model()
 	model.load_weights('output/checkpoints/{}-loss.h5'.format(type(class_model).__name__.lower()))
 	model.layers[-1].activation = None

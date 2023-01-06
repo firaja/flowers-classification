@@ -121,11 +121,12 @@ class Inceptionv3:
 
     def __init__(self, dropout):
         inceptionV3 = InceptionV3(weights=WEIGHTS, include_top=False)
-
         output = GlobalAveragePooling2D()(inceptionV3.output)
-        output = Dropout(dropout)(output)
-        output = Dense(102)(output)
-        output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
+        output = Dense(512, name='D2')(output)
+        output = BatchNormalization(name='BN3')(output)
+        output = Dropout(dropout, name='DO4')(output)
+        output = Dense(102, name='D5')(output)
+        output = Activation(ACTIVATION, dtype='float32', name='A6')(output)
         self.model = Model(inputs=inceptionV3.input, outputs=output)
 
     def get_model(self):
