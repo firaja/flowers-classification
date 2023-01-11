@@ -1,0 +1,1 @@
+pdflatex ProjectTemplate.tex && bibtex ProjectTemplate && pdflatex ProjectTemplate.tex && pdflatex ProjectTemplate.tex

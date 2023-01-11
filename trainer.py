@@ -34,6 +34,7 @@ def parse_arguments():
     parser.add_argument('--config', type=str, const='config.yml', default='config.yml', nargs='?', help='Configuration file')
     parser.add_argument('--mp', default=False, action='store_true', help='Enable mixed precision operations (16bit-32bit)')
     parser.add_argument('--da', default=False, action='store_true', help='Enable Data Augmentation')
+    parser.add_argument('--freeze', type=float, const=0, default=0, nargs='?', help='Frozen layers')
     parser.add_argument('--epoch', type=int, const=50, default=50, nargs='?', help='Set the number of epochs')
 
     
@@ -59,8 +60,11 @@ if __name__ == '__main__':
     
     # Get the model
     architecture = models.ARCHITECTURES[args.arch]
-    model = architecture(args.dropout).get_model()
-    model.summary()
+    architecture = architecture(args.dropout)
+    preprocessor = architecture.preprocess()
+    model = architecture.get_model()
+    
+    #model.summary(show_trainable=True)
     target_size = architecture.size
 
 
@@ -73,7 +77,9 @@ if __name__ == '__main__':
     if args.da:
         p = Processing(target_size=target_size,
                         batch_size=args.batch,
-                        shuffle=True)
+                        shuffle=True,
+                        preprocessor=preprocessor,
+                        augment=False)
     # or without data augmentation
     else:
         p = Processing(target_size=target_size,
@@ -81,7 +87,8 @@ if __name__ == '__main__':
                         shuffle=True, 
                         brightness_delta=0, 
                         flip=False, 
-                        rotation=0)
+                        rotation=0,
+                        preprocessor=preprocessor)
     train_preprocessed, test_preprocessed, validation_preprocessed, train_cardinality, validation_cardinality = p.get_dataset()
 
     
@@ -123,10 +130,10 @@ if __name__ == '__main__':
     history = model.fit(train_preprocessed,
                                   epochs=args.epoch,
                                   verbose=1,
-                                  #steps_per_epoch=step_size_train,
+                                  steps_per_epoch=step_size_train,
                                   validation_data=validation_preprocessed,
-                                  #validation_steps=step_size_valid,
-                                  callbacks=[clr, mcp_save_acc, mcp_save_loss],
+                                  validation_steps=step_size_valid,
+                                  callbacks=[clr, mcp_save_acc, mcp_save_loss, es],
                                   #workers=64,
                                   #use_multiprocessing=False,
                                   #max_queue_size=32

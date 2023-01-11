@@ -192,7 +192,7 @@ if __name__ == '__main__':
     lrf.find(
         train_preprocessed,
         1e-10, 1e-1,
-        epochs=None,
+        epochs=10,
         stepsPerEpoch=step_size_train,
         batchSize=args.batch,
         use_multiprocessing=False)

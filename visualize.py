@@ -1,7 +1,6 @@
 import argparse
 import utils
 import models
-import processing
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
@@ -10,6 +9,10 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import cv2
 from tensorflow.keras.models import Model
+from processing import Processing
+from mlxtend.plotting import plot_confusion_matrix
+from sklearn.metrics import confusion_matrix
+
 
 
 
@@ -110,16 +113,24 @@ if __name__ == '__main__':
 	preprocess_input = keras.applications.xception.preprocess_input
 	decode_predictions = keras.applications.xception.decode_predictions
 
+
+	
+
 	class_model = models.Inceptionv3(0.5)
 	model = class_model.get_model()
 	model.load_weights('output/checkpoints/{}-loss.h5'.format(type(class_model).__name__.lower()))
-	model.layers[-1].activation = None
-	model.summary()
+	#model.layers[-1].activation = None
+	#model.summary()
 	target_size = class_model.size
-	
 
+	p = Processing(target_size=target_size, batch_size=512, shuffle=True)
+	_, test_dataset, _, _ , _ = p.get_dataset()
 
-	img_path = utils.get_path('/home/firaja/Downloads/moon.jpg')
+	true_categories = tf.concat([y for x, y in test_dataset], axis=0)
+
+	print(true_categories)
+
+	img_path = utils.get_path('./image.jpg')
 	image = cv2.imread(img_path)	
 	image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 	image = cv2.resize(image, (target_size, target_size))
@@ -133,7 +144,6 @@ if __name__ == '__main__':
 	#	print('{}({}): {}'.format(utils.LABELS[i], i+1, predictions[i]))
 	indexes = np.argpartition(predictions, -top)[-top:]
 	indexes = indexes[np.argsort(predictions[indexes])]
-	print('---------------')
 	for i in indexes:
 		print('{}({}): {}'.format(utils.LABELS[i], i+1, predictions[i]))
 
@@ -151,6 +161,14 @@ if __name__ == '__main__':
 	(heatmap, output) = icam.overlay_heatmap(heatmap, image, 0.4)
 
 	
+
+	Y_test_pred = model.predict(test_dataset)
+	y_test_pred = Y_test_pred.argmax(1)
+	cm = confusion_matrix(true_categories, y_test_pred)
+	fig, ax = plot_confusion_matrix(conf_mat=cm, figsize=(20,20), colorbar=True)
+	#plt.xticks(np.arange(50), np.arange(1, 51))
+	#plt.yticks(np.arange(50), np.arange(1, 51))
+	plt.show()
 
 
 	fig, ax = plt.subplots(1, 3)

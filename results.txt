@@ -73,6 +73,93 @@ loss	inceptionv3	16	4.0	Adam	triangular	0.4383770823478699
 accuracy	inceptionv3	16	8	Adam	triangular	0.9392156600952148
 loss	inceptionv3	16	8	Adam	triangular	0.25803864002227783
 
-accuracy	inceptionv3	16	8	Adam	triangular	0.9490196108818054
+accuracy	inceptionv3	16	8	Adam	triangular	0.9490196108818054 <<<<<<<<<<<<<<<<<< no aug
 loss	inceptionv3	16	8	Adam	triangular	0.2190467119216919
+
+accuracy	inceptionv3	16	8	Adam	triangular	0.9470587968826294 <<<<<<<<<<<<<<<<<< aug
+loss	inceptionv3	16	8	Adam	triangular	0.22501905262470245
+
+accuracy	inceptionv3	16	8	Adam	triangular	0.8676470518112183
+loss	inceptionv3	16	8	Adam	triangular	0.5604623556137085
+
+accuracy	inceptionv3	16	8	Adam	triangular	0.9480392336845398
+loss	inceptionv3	16	8	Adam	triangular	0.2009575366973877
+
+accuracy	frozeninceptionv3	16	8	Adam	triangular	0.9509803652763367
+loss	frozeninceptionv3	16	8	Adam	triangular	0.25363099575042725
+
+accuracy	custom	16	8	Adam	triangular	0.4735293984413147
+loss	custom	16	8	Adam	triangular	1.9692713022232056
+
+accuracy	custom	16	8	Adam	triangular2	0.3921568691730499
+loss	custom	16	8	Adam	triangular2	3.005720853805542
+
+accuracy	custom	128	8	Adam	triangular2	0.36666667461395264
+loss	custom	128	8	Adam	triangular2	3.1324079036712646
+
+accuracy	custom	128	8	Adam	triangular	0.3745098114013672
+loss	custom	128	8	Adam	triangular	3.2138495445251465
+
+accuracy	custom	16	8	Adam	triangular	0.3843137323856354
+loss	custom	16	8	Adam	triangular	3.075228452682495
+
+accuracy	fullfrozeninceptionv3	16	8	Adam	triangular	0.8382353186607361
+loss	fullfrozeninceptionv3	16	8	Adam	triangular	0.6394252777099609
+
+accuracy	inceptionv3	16	8	Adam	triangular	0.6166666746139526
+loss	inceptionv3	16	8	Adam	triangular	1.6653729677200317
+
+accuracy	inceptionv3	8	8	Adam	triangular	0.6313725709915161
+loss	inceptionv3	8	8	Adam	triangular	1.5568448305130005
+
+accuracy	inceptionv3	4	8	Adam	triangular	0.5568627715110779
+loss	inceptionv3	4	8	Adam	triangular	2.0829904079437256
+
+accuracy	inceptionv3	16	8	SGD	triangular	0.4892156720161438
+loss	inceptionv3	16	8	SGD	triangular	2.319267511367798
+
+accuracy	inceptionv3	8	8	SGD	triangular	0.6284313797950745
+loss	inceptionv3	8	8	SGD	triangular	1.5974136590957642
+
+accuracy	inceptionv3	4	8	SGD	triangular	0.5921568870544434
+loss	inceptionv3	4	8	SGD	triangular	1.8805285692214966
+
+accuracy	resnet18	64	2.0	Adam	triangular	0.009803921915590763
+loss	resnet18	64	2.0	Adam	triangular	4.624963760375977
+
+accuracy	resnet18	64	2.0	Adam	triangular	0.0107421875
+loss	resnet18	64	2.0	Adam	triangular	4.624967575073242
+
+accuracy	resnet18	64	2.0	SGD	triangular	0.009803921915590763
+loss	resnet18	64	2.0	SGD	triangular	4.624992370605469
+
+accuracy	inceptionv3	16	2.0	Adam	triangular	0.8029412031173706
+loss	inceptionv3	16	2.0	Adam	triangular	0.8360143899917603
+
+accuracy	inceptionv3	16	2.0	Adam	triangular	0.7627450823783875
+loss	inceptionv3	16	2.0	Adam	triangular	0.9881539940834045
+
+accuracy	inceptionv3	16	2.0	Adam	triangular	0.8303921818733215
+loss	inceptionv3	16	2.0	Adam	triangular	0.7358267307281494
+
+accuracy	resnet18	4	2.0	Adam	triangular	0.07156863063573837
+loss	resnet18	4	2.0	Adam	triangular	4.570555210113525
+
+accuracy	resnet18	16	2.0	Adam	triangular	0.8500000238418579
+loss	resnet18	16	2.0	Adam	triangular	0.6078084707260132
+
+accuracy	resnet18	16	2.0	Adam	triangular	0.8294117450714111
+loss	resnet18	16	2.0	Adam	triangular	0.6724100708961487
+
+accuracy	inceptionv3	4	2.0	Adam	triangular	0.030392156913876534
+loss	inceptionv3	4	2.0	Adam	triangular	4.8745551109313965
+
+accuracy	resnet18	32	8	Adam	triangular	0.01764705963432789
+loss	resnet18	32	8	Adam	triangular	4.967413425445557
+
+accuracy	resnet18	64	2.0	Adam	triangular	0.014763779938220978
+loss	resnet18	64	2.0	Adam	triangular	4.806983947753906
+
+accuracy	resnet18	64	2.0	Adam	triangular	0.014763779938220978
+loss	resnet18	64	2.0	Adam	triangular	4.686240196228027
 
