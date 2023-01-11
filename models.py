@@ -37,29 +37,10 @@ def last_conv(model):
     
 
 
-class Vgg16 :
-
-    size = 224
-
-    def __init__(self, dropout):
-        vgg16 = VGG16(weights=WEIGHTS, include_top=False, input_shape=(self.size, self.size, 3))
-
-        output = GlobalAveragePooling2D()(vgg16.output)
-        output = Dropout(dropout)(output)
-        output = Dense(102)(output)
-        output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
-        self.model = Model(inputs=vgg16.input, outputs=output)
-
-    def get_model(self):
-        return self.model
-
-    def get_last_conv(self):
-        return last_conv(self.model)
-
 
 class Efficientnetb4:
 
-    size = 380
+    size = 224
 
     def __init__(self, dropout):
         efficientnet = EfficientNetB4(weights=WEIGHTS, include_top=False, input_shape=(self.size, self.size, 3))
@@ -70,8 +51,45 @@ class Efficientnetb4:
         output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
         self.model = Model(inputs=efficientnet.input, outputs=output)
 
+
     def get_model(self):
         return self.model
+
+    def preprocess(self):
+        return tf.keras.applications.efficientnet.preprocess_input
+
+    def get_last_conv(self):
+        return last_conv(self.model)
+
+
+
+
+class FrozenEfficientnetb4:
+
+    size = 224
+
+    def __init__(self, dropout):
+        efficientnet = EfficientNetB4(weights=WEIGHTS, include_top=False, input_shape=(self.size, self.size, 3))
+
+        efficientnet.trainable = True
+
+        for layer in efficientnet.layers:
+            layer.trainable = False
+
+        output = GlobalAveragePooling2D()(efficientnet.output)
+        output = Dropout(dropout)(output)
+        output = Dense(512)(output)
+        output = Dropout(dropout)(output)
+        output = Dense(102)(output)
+        output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
+        self.model = Model(inputs=efficientnet.input, outputs=output)
+
+
+    def get_model(self):
+        return self.model
+
+    def preprocess(self):
+        return tf.keras.applications.efficientnet.preprocess_input
 
     def get_last_conv(self):
         return last_conv(self.model)
@@ -86,11 +104,11 @@ class Resnet18:
         base_model = resnet(input_shape=(self.size, self.size, 3), include_top=False, weights=WEIGHTS)
         
         output = GlobalAveragePooling2D()(base_model.output)
-        #output = Dense(512)(output)
-        #output = BatchNormalization()(output)
+        output = Dense(512)(output)
+        output = BatchNormalization()(output)
         output = Dropout(dropout)(output)
-        output = Dense(102, activation=ACTIVATION)(output)
-        #output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
+        output = Dense(102)(output)
+        output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
         self.model = Model(inputs=base_model.input, outputs=output)
 
     def get_model(self):
@@ -130,50 +148,7 @@ class Inceptionv3:
 
 
 
-class FrozenInceptionv3:
 
-    size = 299
-
-    def __init__(self, dropout):
-        inceptionV3 = InceptionV3(weights=WEIGHTS, include_top=False)
-        for layer in inceptionV3.layers[:-len(inceptionV3.layers)//2]:
-            layer.trainable = False
-        output = GlobalAveragePooling2D()(inceptionV3.output)
-        output = Dense(512)(output)
-        output = BatchNormalization()(output)
-        output = Dropout(dropout)(output)
-        output = Dense(102)(output)
-        output = Activation(ACTIVATION, dtype='float32')(output)
-        self.model = Model(inputs=inceptionV3.input, outputs=output)
-
-    def get_model(self):
-        return self.model
-
-    def get_last_conv(self):
-        return last_conv(self.model)
-
-
-class FullFrozenInceptionv3:
-
-    size = 299
-
-    def __init__(self, dropout):
-        inceptionV3 = InceptionV3(weights=WEIGHTS, include_top=False)
-        for layer in inceptionV3.layers:
-            layer.trainable = False
-        output = GlobalAveragePooling2D()(inceptionV3.output)
-        output = Dense(512)(output)
-        output = BatchNormalization()(output)
-        output = Dropout(dropout)(output)
-        output = Dense(102)(output)
-        output = Activation(ACTIVATION, dtype='float32')(output)
-        self.model = Model(inputs=inceptionV3.input, outputs=output)
-
-    def get_model(self):
-        return self.model
-
-    def get_last_conv(self):
-        return last_conv(self.model)
 
 
 

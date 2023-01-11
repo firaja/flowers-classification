@@ -121,12 +121,19 @@ if __name__ == '__main__':
 	model.load_weights('output/checkpoints/{}-loss.h5'.format(type(class_model).__name__.lower()))
 	#model.layers[-1].activation = None
 	#model.summary()
+	preprocessor = class_model.preprocess()
+
 	target_size = class_model.size
 
-	p = Processing(target_size=target_size, batch_size=512, shuffle=True)
-	_, test_dataset, _, _ , _ = p.get_dataset()
+	p = Processing(target_size=target_size,
+                        batch_size=None,
+                        config=config,
+                        preprocessor=preprocessor)
+	
+	train_preprocessed, validation_preprocessed, test_preprocessed  = p.get_dataset()
 
-	true_categories = tf.concat([y for x, y in test_dataset], axis=0)
+
+	true_categories = tf.concat([y for x, y in test_preprocessed], axis=0)
 
 	print(true_categories)
 
@@ -162,7 +169,7 @@ if __name__ == '__main__':
 
 	
 
-	Y_test_pred = model.predict(test_dataset)
+	Y_test_pred = model.predict(test_preprocessed)
 	y_test_pred = Y_test_pred.argmax(1)
 	cm = confusion_matrix(true_categories, y_test_pred)
 	fig, ax = plot_confusion_matrix(conf_mat=cm, figsize=(20,20), colorbar=True)

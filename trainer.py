@@ -64,7 +64,7 @@ if __name__ == '__main__':
     preprocessor = architecture.preprocess()
     model = architecture.get_model()
     
-    #model.summary(show_trainable=True)
+    model.summary(show_trainable=True)
     target_size = architecture.size
 
 
@@ -77,25 +77,27 @@ if __name__ == '__main__':
     if args.da:
         p = Processing(target_size=target_size,
                         batch_size=args.batch,
-                        shuffle=True,
-                        preprocessor=preprocessor,
-                        augment=False)
+                        config=config,
+                        preprocessor=preprocessor)
     # or without data augmentation
     else:
         p = Processing(target_size=target_size,
                         batch_size=args.batch,
-                        shuffle=True, 
-                        brightness_delta=0, 
+                        config=config,
+                        brightness_delta=0,
+                        zoom_delta=0, 
                         flip=False, 
-                        rotation=0,
-                        preprocessor=preprocessor)
-    train_preprocessed, test_preprocessed, validation_preprocessed, train_cardinality, validation_cardinality = p.get_dataset()
+                        rotation=0)
+
+
+
+    train_preprocessed, validation_preprocessed, test_preprocessed  = p.get_dataset()
+    train_cardinality, validation_cardinality = train_preprocessed.n, validation_preprocessed.n
 
     
     # Finalize the model
     model.compile(loss=config['training']['loss'], optimizer=optimizer, metrics=['acc'])
 
-    #model.summary()
 
     # Checkpoints
     mcp_save_acc = ModelCheckpoint(utils.get_path(config['paths']['checkpoint']['accuracy'].format(args.arch)),
@@ -118,7 +120,7 @@ if __name__ == '__main__':
                     max_lr=learning_rate[1],
                     step_size=stepSize)
 
-    # Defien the Early Stopping strategy
+    # Define the Early Stopping strategy
     es = EarlyStopping(monitor='val_loss', 
                         patience=10, 
                         mode='min', 

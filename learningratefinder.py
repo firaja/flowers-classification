@@ -11,7 +11,6 @@ import utils
 from processing import Processing
 import models
 
-CLRS = ['triangular', 'triangular2', 'exp']
 
 
 
@@ -147,15 +146,16 @@ class LearningRateFinder:
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Learning Rate Finder')
+    parser = argparse.ArgumentParser(description='Flower Recognition Neural Network')
 
     parser.add_argument('--batch', type=int, const=64, default=64, nargs='?', help='Batch size used during training')
     parser.add_argument('--arch', type=str, const='resnet18', default='resnet18', nargs='?', choices=models.ARCHITECTURES.keys(), help='Architecture')
     parser.add_argument('--opt', type=str, const='Adam', default='SGD', nargs='?', choices=models.OPTIMIZERS.keys(), help='Optimizer')
-    parser.add_argument('--clr', type=str, const='triangular', default='triangular', nargs='?', choices=CLRS, help='Cyclical learning rate')
-    parser.add_argument('--step', type=float, const=8, default=8, nargs='?', help='Step size')
     parser.add_argument('--dropout', type=float, const=0.5, default=0.5, nargs='?', help='Dropout rate')
     parser.add_argument('--config', type=str, const='config.yml', default='config.yml', nargs='?', help='Configuration file')
+    parser.add_argument('--da', default=False, action='store_true', help='Enable Data Augmentation')
+    parser.add_argument('--freeze', type=float, const=0, default=0, nargs='?', help='Frozen layers')
+    parser.add_argument('--epoch', type=int, const=50, default=50, nargs='?', help='Set the number of epochs')
     
     return parser.parse_args()
 
@@ -164,30 +164,42 @@ if __name__ == '__main__':
     args = parse_arguments()
     config = utils.read_configuration(args.config)
 
-
+    # Do not allocate all the memory during initialization
     gpus = tf.config.experimental.list_physical_devices('GPU')
     for gpu in gpus:
         tf.config.experimental.set_memory_growth(gpu, True)
 
+    # Get the model
     architecture = models.ARCHITECTURES[args.arch]
+    architecture = architecture(args.dropout)
+    preprocessor = architecture.preprocess()
+    model = architecture.get_model()
     
-    model = architecture(args.dropout).get_model()
-    
+    #model.summary(show_trainable=True)
     target_size = architecture.size
+
+
+    # Get the optimizer
     optimizer = models.OPTIMIZERS[args.opt]['get']()()
+    learning_rate = models.OPTIMIZERS[args.opt]['lr']
 
-    train_preprocessed, _, _, train_cardinality, _ = Processing(target_size=target_size,
-                                                                batch_size=args.batch,
-                                                                shuffle=True, 
-                                                                brightness_delta=0, 
-                                                                flip=False, 
-                                                                rotation=0).get_dataset()
+    
+    p = Processing(target_size=target_size,
+                    batch_size=args.batch,
+                    config=config,
+                    preprocessor=preprocessor)
+    
 
+
+
+    train_preprocessed, validation_preprocessed, test_preprocessed  = p.get_dataset()
+    train_cardinality, validation_cardinality = train_preprocessed.n, validation_preprocessed.n
+
+    # Define how many iterations are required to complete a learning rate cycle
     step_size_train = np.ceil(train_cardinality / args.batch)
 
     model.compile(loss=config['training']['loss'], optimizer=optimizer, metrics=['acc'])
 
-    print("[INFO] finding learning rate...")
     lrf = LearningRateFinder(model)
     lrf.find(
         train_preprocessed,
@@ -200,10 +212,5 @@ if __name__ == '__main__':
     # plot the loss for the various learning rates and save the
     # resulting plot to disk
     lrf.plot_loss()
-    plt.savefig(utils.get_path(config['paths']['plot']['lr']))
-
-    # gracefully exit the script so we can adjust our learning rates
-    # in the config and then train the network for our full set of
-    # epochs
-    print("[INFO] learning rate finder complete")
-    print("[INFO] examine plot and adjust learning rates before training")
+    plt.show()
+    #plt.savefig(utils.get_path(config['paths']['plot']['lr']))

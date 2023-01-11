@@ -7,7 +7,11 @@ paths:
     loss: output/plots/{}/loss_b{}_s{}_o{}_c{}_a{}.png
     accuracy: output/plots/{}/accuracy_b{}_s{}_o{}_c{}_a{}.png
     lr: output/plots/lr.png
+  data:
+    training: data/train
+    validation: data/valid
+    test: data/test
 training:
   dataset: oxford_flowers102
   mode: categorical
-  loss: sparse_categorical_crossentropy
+  loss: categorical_crossentropy
