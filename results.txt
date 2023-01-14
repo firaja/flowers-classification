@@ -192,3 +192,6 @@ loss	frozenefficientnetb4	16	2.0	Adam	triangular	0.6778745651245117
 accuracy	frozenefficientnetb4	32	2.0	Adam	triangular	0.8186274766921997
 loss	frozenefficientnetb4	32	2.0	Adam	triangular	0.7267705202102661
 
+accuracy	efficientnetb4	16	2.0	Adam	triangular	0.9156862497329712
+loss	efficientnetb4	16	2.0	Adam	triangular	0.3474076986312866
+

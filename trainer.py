@@ -121,7 +121,7 @@ if __name__ == '__main__':
                     step_size=stepSize)
 
     # Define the Early Stopping strategy
-    es = EarlyStopping(monitor='val_loss', 
+    es = EarlyStopping(monitor='val_acc', 
                         patience=10, 
                         mode='min', 
                         #restore_best_weights=True, 

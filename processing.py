@@ -43,9 +43,16 @@ class Processing:
 
         test_generator = self.test_datagen.flow_from_directory(directory=self.config['paths']['data']['test'],
                                                             batch_size=self.batch_size,
-                                                            shuffle=True,
+                                                            shuffle=False,
                                                             target_size=(self.target_size, self.target_size),
                                                             class_mode=self.config['training']['mode'])
 
 
         return train_generator, valid_generator, test_generator
+
+    def from_folder(self, path):
+        return self.test_datagen.flow_from_directory(directory=path,
+                                                            batch_size=self.batch_size,
+                                                            shuffle=False,
+                                                            target_size=(self.target_size, self.target_size),
+                                                            class_mode=self.config['training']['mode'])
