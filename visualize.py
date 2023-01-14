@@ -12,6 +12,7 @@ from tensorflow.keras.models import Model
 from processing import Processing
 from mlxtend.plotting import plot_confusion_matrix
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
 
 
 
@@ -74,6 +75,9 @@ class GradCAM:
 	def overlay_heatmap(self, heatmap, image, alpha):
 		
 		jet_heatmap = np.uint8(cm.jet(heatmap)[..., :3] * 255)
+		image = np.uint8(image)
+		print(image.shape)
+		print(jet_heatmap.shape)
 		output = cv2.addWeighted(image, alpha, jet_heatmap, 1 - alpha, 0)
 		return (jet_heatmap, output)
 
@@ -106,6 +110,33 @@ class SaliencyMap:
 			jet_saliency = np.uint8(cm.jet(smap[0])[..., :3] * 255)
 			return jet_saliency
 
+
+def plot_cm(cm, zero_diagonal=False, labels=None):
+	"""Plot a confusion matrix."""
+	n = len(cm)
+	if zero_diagonal:
+		for i in range(n):
+			cm[i][i] = 0
+	size = int(n / 4.)
+	fig = plt.figure(figsize=(size, size), dpi=80, )
+	plt.clf()
+	ax = fig.add_subplot(111)
+	ax.set_aspect(1)
+	if labels is None:
+		labels = [i for i in range(len(cm))]
+	x = [i for i in range(len(cm))]
+	plt.xticks(x, labels, rotation='vertical')
+	y = [i for i in range(len(cm))]
+	plt.yticks(y, labels)  # , rotation='vertical'
+	res = ax.imshow(np.array(cm), cmap=plt.cm.viridis, interpolation='nearest')
+	width, height = cm.shape
+
+	#divider = make_axes_locatable(ax)
+	#cax = divider.append_axes("right", size="5%", pad=0.5)
+	plt.colorbar(res)
+
+	plt.show()
+
 if __name__ == '__main__':
 	args = parse_arguments()
 	config = utils.read_configuration(args.config)
@@ -116,7 +147,7 @@ if __name__ == '__main__':
 
 	
 
-	class_model = models.Inceptionv3(0.5)
+	class_model = models.Efficientnetb4(0.5)
 	model = class_model.get_model()
 	model.load_weights('output/checkpoints/{}-loss.h5'.format(type(class_model).__name__.lower()))
 	#model.layers[-1].activation = None
@@ -126,24 +157,24 @@ if __name__ == '__main__':
 	target_size = class_model.size
 
 	p = Processing(target_size=target_size,
-                        batch_size=None,
+                        batch_size=1,
                         config=config,
                         preprocessor=preprocessor)
 	
-	train_preprocessed, validation_preprocessed, test_preprocessed  = p.get_dataset()
+	test_preprocessed  = p.from_folder('./image')
 
+	image, label = test_preprocessed.__getitem__(2)
 
-	true_categories = tf.concat([y for x, y in test_preprocessed], axis=0)
+	
+	img = image[0]
+	#img_path = utils.get_path('./image/81/image.jpg')
+	#image = cv2.imread(img_path)	
+	#image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+	#image = cv2.resize(image, (target_size, target_size))
+	#image = tf.expand_dims(image, axis=-1)
+	#image = tf.divide(image, 255)
+	#image = tf.reshape(image, [1, target_size, target_size, 3])
 
-	print(true_categories)
-
-	img_path = utils.get_path('./image.jpg')
-	image = cv2.imread(img_path)	
-	image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-	image = cv2.resize(image, (target_size, target_size))
-	image = tf.expand_dims(image, axis=-1)
-	image = tf.divide(image, 255)
-	image = tf.reshape(image, [1, target_size, target_size, 3])
 
 	top = 4
 	predictions = model.predict(image)[0]
@@ -151,45 +182,47 @@ if __name__ == '__main__':
 	#	print('{}({}): {}'.format(utils.LABELS[i], i+1, predictions[i]))
 	indexes = np.argpartition(predictions, -top)[-top:]
 	indexes = indexes[np.argsort(predictions[indexes])]
+	print(indexes)
 	for i in indexes:
-		print('{}({}): {}'.format(utils.LABELS[i], i+1, predictions[i]))
+		print('{}({}): {}'.format(utils.LABELS[i], i, predictions[i]))
 
 	icam = GradCAM(model, np.argmax(predictions), None)
 	heatmap = icam.compute_heatmap(image)
 	heatmap = cv2.resize(heatmap, (target_size, target_size))
 
-	smap = SaliencyMap().get_saliency_map(model, image, np.argmax(predictions)) 
+	smap = SaliencyMap().get_saliency_map(model, tf.expand_dims(img, axis=0), np.argmax(predictions)) 
 
-	image = cv2.imread(img_path)
-	image = cv2.resize(image, (target_size, target_size))
-	image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+	#image = cv2.imread(img_path)
+	#image = cv2.resize(image, (target_size, target_size))
+	#img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-
-	(heatmap, output) = icam.overlay_heatmap(heatmap, image, 0.4)
-
-	
-
-	Y_test_pred = model.predict(test_preprocessed)
-	y_test_pred = Y_test_pred.argmax(1)
-	cm = confusion_matrix(true_categories, y_test_pred)
-	fig, ax = plot_confusion_matrix(conf_mat=cm, figsize=(20,20), colorbar=True)
-	#plt.xticks(np.arange(50), np.arange(1, 51))
-	#plt.yticks(np.arange(50), np.arange(1, 51))
-	plt.show()
+	(heatmap, output) = icam.overlay_heatmap(heatmap, img, 0.4)
 
 
 	fig, ax = plt.subplots(1, 3)
 	fig.set_size_inches(20,20)
 
 	ax[0].imshow(heatmap)
-	ax[1].imshow(image)
+	ax[1].imshow(np.uint8(img))
 	ax[2].imshow(output)
-	#ax[3].imshow(smap)
 	plt.show()
 
 
 	fig, axes = plt.subplots(1,2,figsize=(14,5))
-	axes[0].imshow(image)
-	i = axes[1].imshow(smap,alpha=0.8)
+	axes[0].imshow(np.uint8(img))
+	i = axes[1].imshow(smap, alpha=0.8)
 	fig.colorbar(i)
 	plt.show()
+
+	p = Processing(target_size=target_size,
+                        batch_size=16,
+                        config=config,
+                        preprocessor=preprocessor)
+
+	_, _, test_preprocessed  = p.get_dataset()
+
+	Y_test_pred = model.predict(test_preprocessed)
+	y_test_pred = Y_test_pred.argmax(1)
+	cm = confusion_matrix(test_preprocessed.classes, y_test_pred)
+	plot_cm(cm)
+	print(classification_report(y_test_pred, test_preprocessed.classes))
