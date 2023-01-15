@@ -147,15 +147,17 @@ Another peculiarity of the dataset is the presence of similar images belonging t
 
 \section{The Methodological Approach}
 
-In order to classify images correctly two types of experiment were taken in accont: the first one aimed to find the best architecture from the one found in 
-litterature that could fit the available hardware (see Section \ref{sec:tech}) and the second tried to find a good trade-off between number of trainable layers and accuracy by freezing the layers' weights during training. \par
-Before proceeding with the description of the experiments, there was a preliminar implicit objective: how to overcome the scarcity of training data.
+In order to classify images correctly two types of experiment were taken in accont: the first one aimed to find the best CNN\footnote{Convolutional Neural Network} architectures in 
+literature that could fit the available hardware (see Section \ref{sec:tech}) and the second tried to find a good trade-off between number of trainable layers and accuracy by freezing the layers' weights during training. \par
+All the proposed architecture were pre-trained on \textit{ImageNet} and used as feature extractors for a new classifier that operates over 102 classes.
 
-\subsection{Technology}\label{sec:tech}
+\subsection{Technology and implementation}\label{sec:tech}
 The hardware used for this work was composed by a GPU NVIDIA 2070 SUPER with 8GB of VRAM, a CPU Intel i7-9700K $3.6$GHz and $32$GB of RAM. \par
 The libraries used were \textit{Keras}, based on \textit{Tensorflow}, for learning and preprocessing, \textit{sklearn} for metrics and \textit{numpy}  for generic calculation.
+\todo{Github}
 
 \subsection{Preprocessing and Data Augmentation}
+Before proceeding with the description of the experiments, there was a preliminar implicit objective: how to overcome the scarcity of training data.\par
 In order to raise the number of samples it was used \texttt{ImageDataGenerator} from \textit{Keras}. This allowed to virtually loop infinitely on the images during the training and most importantly to transform each of these images by applying none, one or more of the following transformations:
 \begin{itemize}
 \item{Horizontal flipping}
@@ -167,8 +169,52 @@ Additionally every image is transformed with the original preprocessing function
 
 
 
-\subsection{Transfer Learning}
-In order to facilitate the learning process
+\subsection{Hyper-parameters}
+To train the perceptron on the extracted features it was decided to use the SGD with momentum $\beta = 0.9$ or Adam with $\beta_1 = 0.9$ and $\beta_2 = 0.999$, with dimension of
+batch equal to $64$ and momentum equal to 0.9. 
+Since the task is a classification over multiple categories the chosen objective function to minimize was \emph{categorical cross-entropy}. \par
+
+The learning rate $\eta$ is calculated according to the algorithm described in \emph{"Cyclical Learning Rates for Training Neural
+Networks”}. This algorithm made $\eta$ fluctuate forward and
+back in a fixed range of values at each iteration during the training phase;
+this strategy had a dual purpose: to reduce the bias introduced by choosing a non-optimal $\eta$ during the design phase and to help the optimizer to escape from saddle points or 
+from local minima that could block its correct covergence.\par
+
+To calculate the aforementioned range of values the authors described the following algorithm:
+\begin{enumerate}
+\item{Choose an interval $I$ on which to make vary $\eta$. For this work $I = [10^{-10}, 10^{-1}]$ was used} 
+\item{Train the model for few epochs (\textit{e.g.} 10) starting with the smallest $\overline{\eta} \in I$. At the end of each epoch exponentially increase $\overline{\eta}$}
+\item{Stop the training when $\eta$ reached the upper bound of $I$}
+\item{Plot the fluctuation of the loss function realtive to $\eta$}
+\end{enumerate}
+As an example, the algorithm generated the plot in Figure \ref{fig:lr} for optimizer Adam and the architecture described in section \todo{section}. 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.8\textwidth]{images/lr_adam.png} 
+\caption{Output of the learning rate finder algorithm}
+\label{fig:lr}
+\end{figure}
+
+The graph show how the network begins to learn starting from $\eta \simeq 10^{-5}$ and diverges once $\eta$ exceeded $\sim10^{-3}$; these two values were used as extremes for the cyclical learning rate algorithm on this particular architecture.\par
+The drawback of this strategy is that it added two additional hyper-parameters: the step size $s$, that determined the number of iterations required to go from the minimum $\eta$ to the maximum, and the cyclical learning rate schedule, that defined the way $\eta$ is modified. 
+\begin{figure}[ht]
+\centering
+\includegraphics[width=1\textwidth]{images/triangular.png} 
+\caption{Plot of the learning rate with \emph{Triangular} and \emph{Triangular2} methods}
+\label{fig:lr}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
