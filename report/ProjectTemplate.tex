@@ -147,19 +147,30 @@ Another peculiarity of the dataset is the presence of similar images belonging t
 
 \section{The Methodological Approach}
 
-This is the central and most important section of the report. Its objective must be to show, with linearity and clarity, the steps that have led to the definition of a decision model. The description of the working hypotheses, confirmed or denied, can be found in this section together with the description of the subsequent refining processes of the models. Comparisons between different models (e.g. heuristics vs. optimal models) in terms of quality of solutions, their explainability and execution times are welcome. 
+In order to classify images correctly two types of experiment were taken in accont: the first one aimed to find the best architecture from the one found in 
+litterature that could fit the available hardware (see Section \ref{sec:tech}) and the second tried to find a good trade-off between number of trainable layers and accuracy by freezing the layers' weights during training. \par
+Before proceeding with the description of the experiments, there was a preliminar implicit objective: how to overcome the scarcity of training data.
 
-Do not attempt to describe all the code in the system, and do not include large pieces of code in this section, use pseudo-code where necessary. Complete source code should be provided separately (in Appendixes, as separated material or as a link to an on-line repo). Instead pick out and describe just the pieces of code which, for example:
+\subsection{Technology}\label{sec:tech}
+The hardware used for this work was composed by a GPU NVIDIA 2070 SUPER with 8GB of VRAM, a CPU Intel i7-9700K $3.6$GHz and $32$GB of RAM. \par
+The libraries used were \textit{Keras}, based on \textit{Tensorflow}, for learning and preprocessing, \textit{sklearn} for metrics and \textit{numpy}  for generic calculation.
+
+\subsection{Preprocessing and Data Augmentation}
+In order to raise the number of samples it was used \texttt{ImageDataGenerator} from \textit{Keras}. This allowed to virtually loop infinitely on the images during the training and most importantly to transform each of these images by applying none, one or more of the following transformations:
 \begin{itemize}
-\item are especially critical to the operation of the system;
-\item you feel might be of particular interest to the reader for some reason;
-\item  illustrate a non-standard or innovative way of implementing an algorithm, data
-structure, etc..
+\item{Horizontal flipping}
+\item{Rotation of angle $\alpha \in [-20^{\circ}, 20^{\circ}]$}
+\item{Shift of brightness $\gamma \in [0.7, 1.3]$}
+\item{Zoom  $\zeta \in [0.8, 1.2]$}
 \end{itemize}
+Additionally every image is transformed with the original preprocessing function used for the training of the original architecture on \textit{ImageNet}.
 
-You should also mention any unforeseen problems you encountered when implementing the
-system and how and to what extent you overcame them. Common problems are:
- difficulties involving existing software.
+
+
+\subsection{Transfer Learning}
+In order to facilitate the learning process
+
+
 
 
 \section{Results and Evaluation}
