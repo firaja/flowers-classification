@@ -195,3 +195,15 @@ loss	frozenefficientnetb4	32	2.0	Adam	triangular	0.7267705202102661
 accuracy	efficientnetb4	16	2.0	Adam	triangular	0.9156862497329712
 loss	efficientnetb4	16	2.0	Adam	triangular	0.3474076986312866
 
+accuracy	resnet18	64	2.0	Adam	triangular	0.8068627715110779
+loss	resnet18	64	2.0	Adam	triangular	0.9273204803466797
+
+accuracy	resnet18	64	2.0	Adam	triangular	0.8823529481887817
+loss	resnet18	64	2.0	Adam	triangular	0.5609150528907776
+
+accuracy	inceptionv3	32	2.0	Adam	triangular	0.9186274409294128
+loss	inceptionv3	32	2.0	Adam	triangular	0.33575814962387085
+
+accuracy	resnet18	16	2.0	Adam	triangular	0.863725483417511
+loss	resnet18	16	2.0	Adam	triangular	0.5612173080444336
+

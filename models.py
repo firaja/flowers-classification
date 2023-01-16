@@ -16,8 +16,8 @@ import sys, inspect
 
 
 WEIGHTS='imagenet'
-ACTIVATION = 'softmax'
-
+ACTIVATION = 'relu'
+FINAL_ACTIVATION = 'softmax'
 
 ARCHITECTURES = {}
 
@@ -43,13 +43,16 @@ class Efficientnetb4:
     size = 224
 
     def __init__(self, dropout):
-        efficientnet = EfficientNetB4(weights=WEIGHTS, include_top=False, input_shape=(self.size, self.size, 3))
+        base_model = EfficientNetB4(weights=WEIGHTS, include_top=False, input_shape=(self.size, self.size, 3))
 
-        output = GlobalAveragePooling2D()(efficientnet.output)
+        output = GlobalAveragePooling2D()(base_model.output)
+        output = Dense(512)(output)
+        output = BatchNormalization()(output)
+        output = Activation(ACTIVATION)(output)
         output = Dropout(dropout)(output)
         output = Dense(102)(output)
-        output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
-        self.model = Model(inputs=efficientnet.input, outputs=output)
+        output = Activation(FINAL_ACTIVATION, dtype='float32', name='predictions')(output)
+        self.model = Model(inputs=base_model.input, outputs=output)
 
 
     def get_model(self):
@@ -69,20 +72,21 @@ class FrozenEfficientnetb4:
     size = 224
 
     def __init__(self, dropout):
-        efficientnet = EfficientNetB4(weights=WEIGHTS, include_top=False, input_shape=(self.size, self.size, 3))
+        base_model = EfficientNetB4(weights=WEIGHTS, include_top=False, input_shape=(self.size, self.size, 3))
 
-        efficientnet.trainable = True
+        base_model.trainable = True
 
-        for layer in efficientnet.layers:
+        for layer in base_model.layers:
             layer.trainable = False
 
-        output = GlobalAveragePooling2D()(efficientnet.output)
-        output = Dropout(dropout)(output)
+        output = GlobalAveragePooling2D()(base_model.output)
         output = Dense(512)(output)
+        output = BatchNormalization()(output)
+        output = Activation(ACTIVATION)(output)
         output = Dropout(dropout)(output)
         output = Dense(102)(output)
-        output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
-        self.model = Model(inputs=efficientnet.input, outputs=output)
+        output = Activation(FINAL_ACTIVATION, dtype='float32', name='predictions')(output)
+        self.model = Model(inputs=base_model.input, outputs=output)
 
 
     def get_model(self):
@@ -106,9 +110,10 @@ class Resnet18:
         output = GlobalAveragePooling2D()(base_model.output)
         output = Dense(512)(output)
         output = BatchNormalization()(output)
+        output = Activation(ACTIVATION)(output)
         output = Dropout(dropout)(output)
         output = Dense(102)(output)
-        output = Activation(ACTIVATION, dtype='float32', name='predictions')(output)
+        output = Activation(FINAL_ACTIVATION, dtype='float32', name='predictions')(output)
         self.model = Model(inputs=base_model.input, outputs=output)
 
     def get_model(self):
@@ -128,14 +133,16 @@ class Inceptionv3:
 
     def __init__(self, dropout):
 
-        inceptionV3 = InceptionV3(weights=WEIGHTS, include_top=False)
-        output = GlobalAveragePooling2D()(inceptionV3.output)
-        #output = Dense(512)(output)
+        base_model = InceptionV3(weights=WEIGHTS, include_top=False)
+
+        output = GlobalAveragePooling2D()(base_model.output)
+        output = Dense(512)(output)
         output = BatchNormalization()(output)
+        output = Activation(ACTIVATION)(output)
         output = Dropout(dropout)(output)
         output = Dense(102)(output)
-        output = Activation(ACTIVATION, dtype='float32')(output)
-        self.model = Model(inputs=inceptionV3.input, outputs=output)
+        output = Activation(FINAL_ACTIVATION, dtype='float32')(output)
+        self.model = Model(inputs=base_model.input, outputs=output)
 
     def get_model(self):
         return self.model

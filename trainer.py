@@ -27,7 +27,7 @@ def parse_arguments():
 
     parser.add_argument('--batch', type=int, const=64, default=64, nargs='?', help='Batch size used during training')
     parser.add_argument('--arch', type=str, const='resnet18', default='resnet18', nargs='?', choices=models.ARCHITECTURES.keys(), help='Architecture')
-    parser.add_argument('--opt', type=str, const='Adam', default='SGD', nargs='?', choices=models.OPTIMIZERS.keys(), help='Optimizer')
+    parser.add_argument('--opt', type=str, const='Adam', default='Adam', nargs='?', choices=models.OPTIMIZERS.keys(), help='Optimizer')
     parser.add_argument('--clr', type=str, const='triangular', default='triangular', nargs='?', choices=CLRS, help='Cyclical learning rate')
     parser.add_argument('--step', type=float, const=8, default=8, nargs='?', help='Step size')
     parser.add_argument('--dropout', type=float, const=0.5, default=0.5, nargs='?', help='Dropout rate')
@@ -123,9 +123,9 @@ if __name__ == '__main__':
     # Define the Early Stopping strategy
     es = EarlyStopping(monitor='val_acc', 
                         patience=10, 
-                        mode='min', 
+                        mode='max', 
                         #restore_best_weights=True, 
-                        min_delta=0.005,
+                        min_delta=0.01,
                         verbose=1)
 
     # Train
