@@ -150,7 +150,12 @@ Another peculiarity of the dataset is the presence of similar images belonging t
 In order to classify images correctly two types of experiment were taken in accont: the first one aimed to find the best CNN\footnote{Convolutional Neural Network} architectures in 
 literature that could fit the available hardware (see Section \ref{sec:tech}) and the second tried to find a good trade-off between number of trainable layers and accuracy by freezing the layers' weights during training. \par
 All the proposed architecture were pre-trained on \textit{ImageNet} and used as feature extractors for a new classifier that operates over 102 classes.
-
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=1\textwidth]{images/architecture.png} 
+\caption{Plot of the learning rate with \emph{Triangular} and \emph{Triangular2} methods}
+\label{fig:architecture}
+\end{figure}
 \subsection{Technology and implementation}\label{sec:tech}
 The hardware used for this work was composed by a GPU NVIDIA 2070 SUPER with 8GB of VRAM, a CPU Intel i7-9700K $3.6$GHz and $32$GB of RAM. \par
 The libraries used were \textit{Keras}, based on \textit{Tensorflow}, for learning and preprocessing, \textit{sklearn} for metrics and \textit{numpy}  for generic calculation.
@@ -165,7 +170,7 @@ In order to raise the number of samples it was used \texttt{ImageDataGenerator} 
 \item{Shift of brightness $\gamma \in [0.7, 1.3]$}
 \item{Zoom  $\zeta \in [0.8, 1.2]$}
 \end{itemize}
-Additionally every image is transformed with the original preprocessing function used for the training of the original architecture on \textit{ImageNet}.
+Additionally every image is transformed with the original preprocessing function used for the training of the original architecture on \textit{ImageNet}.\todo{preprocessing}
 
 
 
@@ -176,32 +181,35 @@ Since the task is a classification over multiple categories the chosen objective
 
 The learning rate $\eta$ is calculated according to the algorithm described in \emph{"Cyclical Learning Rates for Training Neural
 Networks”}. This algorithm made $\eta$ fluctuate forward and
-back in a fixed range of values at each iteration during the training phase;
+back in a fixed interval $I$ at each iteration during the training phase;
 this strategy had a dual purpose: to reduce the bias introduced by choosing a non-optimal $\eta$ during the design phase and to help the optimizer to escape from saddle points or 
 from local minima that could block its correct covergence.\par
 
-To calculate the aforementioned range of values the authors described the following algorithm:
+To calculate the aforementioned interval $I$ of values the authors described the following algorithm:
 \begin{enumerate}
-\item{Choose an interval $I$ on which to make vary $\eta$. For this work $I = [10^{-10}, 10^{-1}]$ was used} 
-\item{Train the model for few epochs (\textit{e.g.} 10) starting with the smallest $\overline{\eta} \in I$. At the end of each epoch exponentially increase $\overline{\eta}$}
-\item{Stop the training when $\eta$ reached the upper bound of $I$}
+\item{Choose an interval $J$ on which to make vary $\eta$. For this work $I = [10^{-10}, 10^{-1}]$ was used} 
+\item{Train the model for few epochs (\textit{e.g.} 10) starting with the smallest $\overline{\eta} \in J$. At the end of each epoch exponentially increase $\overline{\eta}$}
+\item{Stop the training when $\eta$ reached the upper bound of $J$}
 \item{Plot the fluctuation of the loss function realtive to $\eta$}
 \end{enumerate}
 As an example, the algorithm generated the plot in Figure \ref{fig:lr} for optimizer Adam and the architecture described in section \todo{section}. 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.8\textwidth]{images/lr_adam.png} 
-\caption{Output of the learning rate finder algorithm}
+\caption{Output of the learning rate finder algorithm. $I=[10^{-5}, 10^{-3}]$ is the optimal solution}
 \label{fig:lr}
 \end{figure}
 
-The graph show how the network begins to learn starting from $\eta \simeq 10^{-5}$ and diverges once $\eta$ exceeded $\sim10^{-3}$; these two values were used as extremes for the cyclical learning rate algorithm on this particular architecture.\par
-The drawback of this strategy is that it added two additional hyper-parameters: the step size $s$, that determined the number of iterations required to go from the minimum $\eta$ to the maximum, and the cyclical learning rate schedule, that defined the way $\eta$ is modified. 
-\begin{figure}[ht]
+The graph show how the network begins to learn starting from $\eta \simeq 10^{-5}$ and diverges once $\eta$ exceeded $\sim10^{-3}$; these two values were used as extremes of $I$ for the cyclical learning rate algorithm on this particular architecture.\par
+The drawback of this strategy is that it added two additional hyper-parameters: the step size $s$, that determined the number of iterations required to go from the minimum $\eta$ to the maximum, and the cyclical learning rate schedule, that defined the way $\eta$ is modified. \par
+
+Figure \ref{fig:triangular} shows the two schedules used for this work: \emph{Triangular} and \emph{Triangular2};
+the difference between the two is that the second method halves the upper bound of $I$ at each cycle completion.
+\begin{figure}[ht!]
 \centering
 \includegraphics[width=1\textwidth]{images/triangular.png} 
 \caption{Plot of the learning rate with \emph{Triangular} and \emph{Triangular2} methods}
-\label{fig:lr}
+\label{fig:triangular}
 \end{figure}
 
 
@@ -211,7 +219,13 @@ The drawback of this strategy is that it added two additional hyper-parameters: 
 
 
 
+\subsection{Experiment 1: Choice of the architecture}
+The first experiment aimed to find the architecture that could achieve the best accuracy on the test set. This work tested \textit{ResNet18}, \textit{InceptionV3} and 
+\textit{EfficientNetB4}. All of them presented diffent peculiarities and could be used for training with the available hardware. \par
+Since the training on \textit{ImageNet} of the networks is not sufficient to use them as feature extractors, the entire networks were fine-tuned in order to update their weights and to fit better the task.
 
+\subsubsection{Fine-tuning of ResNet18}
+The preprocessing function applied on the images converted them from RGB to BGR, then each color channel was zero-centered with respect to the \textit{ImageNet} dataset, without scaling. \par
 
 
 
