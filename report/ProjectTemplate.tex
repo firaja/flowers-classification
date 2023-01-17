@@ -250,10 +250,44 @@ The preprocessing function applied on the images scaled their pixels between -1 
 From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-5}, 10^{-2}]$ for SGD and $[10^{-3}, 10^{-3}]$ for Adam.
 
 
-\subsubsection{Fine-tuning of EfficientB4}\label{sec:efficientb4}
-ResNet-18 is a convolutional neural network that is 18 layers deep and accepts images of input size of $224 \times 224$. It is a residual network, that is it implements skip connections to help to address the problem of vanishing  gradients. \par
-The preprocessing function applied on the images converted them from RGB to BGR, then each color channel was zero-centered with respect to the \textit{ImageNet} dataset, without scaling. \par
-From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-5}, 10^{-3}]$ for SGD and $[10^{-6}, 10^{-4}]$ for Adam.
+\subsubsection{Fine-tuning of EfficientNetB4}\label{sec:efficientb4}
+EfficientNetB4 is a convolutional neural network that is 237 layers deep and accepts images of input size of $224 \times 224$. 
+This type of architecture was built using automatic search and scaling techniques
+aimed to simultaneously maximize the accuracy of the network and the number of operations per second. \par
+There was no need to apply the ad-hoc preprocessing function because it was embedded in the Keras implementation. \par
+From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-5}, 10^{-3}]$ fboth or SGD and Adam.
+
+
+\subsection{Evaluation of the training}
+To verify the quality of the training two techniques were applied: \textit{grad-CAM} and \textit{Saliency Map}. Confusion matrices as well helped indentifying
+issues in the first stages of the implementation.
+
+\subsubsection{grad-CAM}
+\textit{grad-CAM} uses the gradient of the last convolutional layer so that the spatial information are preserved. An heatmap is displayed over the original image
+that shows the main component identified by the network.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=1\textwidth]{images/grad_multi.png} 
+\caption{\textit{grad-CAM} of multiple flowers}
+\label{fig:grad_multi}
+\end{figure}
+
+Figure \ref{fig:grad_multi} demonstrates that the model could distinguish the flowers from the background and that the background is not an important 
+feature to be learned.
+
+
+\subsubsection{Saliency Map}
+Like the \textit{grad-CAM}, \textit{Saliency Maps} analyze a specific layer of the model, but in this case it is a classification layer. It shows the gradients of
+an image with respect with the label. The map indicates the points that affected more the correct classification of the image.
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=1\textwidth]{images/sal_bee.png} 
+\caption{\textit{Saliency Map} of a flower flown over by a bee}
+\label{fig:sal_bee}
+\end{figure}
+For example Figure \ref{fig:sal_bee} indicated that the bee flying over the flower didn't affect the classification and the model stayed focus on the flower petals.
+
 
 
 \section{Results and Evaluation}
