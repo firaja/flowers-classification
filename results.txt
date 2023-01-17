@@ -207,3 +207,9 @@ loss	inceptionv3	32	2.0	Adam	triangular	0.33575814962387085
 accuracy	resnet18	16	2.0	Adam	triangular	0.863725483417511
 loss	resnet18	16	2.0	Adam	triangular	0.5612173080444336
 
+accuracy	efficientnetb4	16	2.0	Adam	triangular	0.9078431129455566
+loss	efficientnetb4	16	2.0	Adam	triangular	0.36129888892173767
+
+accuracy	resnet18	64	2.0	Adam	triangular	0.8764705657958984
+loss	resnet18	64	2.0	Adam	triangular	0.5804650783538818
+

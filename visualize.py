@@ -5,6 +5,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from PIL import Image
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import cv2
@@ -13,6 +14,8 @@ from processing import Processing
 from mlxtend.plotting import plot_confusion_matrix
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
+from matplotlib.colors import ListedColormap, LinearSegmentedColormap
+
 
 
 
@@ -95,7 +98,7 @@ class SaliencyMap:
 
 			# Get the gradients of the loss w.r.t to the input image.
 			gradient = tape.gradient(loss, inputs)
-			gradient = tf.math.abs(gradient)
+			gradient = tf.nn.relu(gradient)
 
 			# take maximum across channels
 			gradient = tf.reduce_max(gradient, axis=-1)
@@ -111,7 +114,7 @@ class SaliencyMap:
 			return jet_saliency
 
 
-def plot_cm(cm, zero_diagonal=False, labels=None):
+def plot_cm(cm, zero_diagonal=False, labels=None, cmap=plt.cm.viridis):
 	"""Plot a confusion matrix."""
 	n = len(cm)
 	if zero_diagonal:
@@ -123,12 +126,12 @@ def plot_cm(cm, zero_diagonal=False, labels=None):
 	ax = fig.add_subplot(111)
 	ax.set_aspect(1)
 	if labels is None:
-		labels = [i for i in range(len(cm))]
+		labels = [i+1 for i in range(len(cm))]
 	x = [i for i in range(len(cm))]
 	plt.xticks(x, labels, rotation='vertical')
 	y = [i for i in range(len(cm))]
 	plt.yticks(y, labels)  # , rotation='vertical'
-	res = ax.imshow(np.array(cm), cmap=plt.cm.viridis, interpolation='nearest')
+	res = ax.imshow(np.array(cm), cmap=cmap, interpolation='nearest')
 	width, height = cm.shape
 
 	#divider = make_axes_locatable(ax)
@@ -163,7 +166,7 @@ if __name__ == '__main__':
 	
 	test_preprocessed  = p.from_folder('./image')
 
-	image, label = test_preprocessed.__getitem__(2)
+	image, label = test_preprocessed.__getitem__(0)
 
 	
 	img = image[0]
@@ -210,7 +213,7 @@ if __name__ == '__main__':
 
 	fig, axes = plt.subplots(1,2,figsize=(14,5))
 	axes[0].imshow(np.uint8(img))
-	i = axes[1].imshow(smap, alpha=0.8)
+	i = axes[1].imshow(smap, alpha=1.0, cmap='jet')
 	fig.colorbar(i)
 	plt.show()
 
@@ -221,8 +224,16 @@ if __name__ == '__main__':
 
 	_, _, test_preprocessed  = p.get_dataset()
 
+
+	# confusion matrices
+	viridis = matplotlib.cm.get_cmap('viridis', 330)
+	newcolors = viridis(np.linspace(0, 1, 330))
+	white = np.array([1, 1, 1, 1])
+	newcolors[:5, :] = white
+	newcmp = ListedColormap(newcolors)
+
 	Y_test_pred = model.predict(test_preprocessed)
 	y_test_pred = Y_test_pred.argmax(1)
 	cm = confusion_matrix(test_preprocessed.classes, y_test_pred)
-	plot_cm(cm)
+	plot_cm(cm, cmap=newcmp)
 	print(classification_report(y_test_pred, test_preprocessed.classes))
