@@ -1,3 +1,4 @@
+import math
 import tensorflow as tf
 import tensorflow.keras
 from classification_models.keras import Classifiers
@@ -24,7 +25,7 @@ ARCHITECTURES = {}
 OPTIMIZERS = {
     'Adam': {
         'get': lambda : lambda : Adam(learning_rate=1e-6),
-        'lr': [1e-6, 5e-4]
+        'lr': [1e-5, 1e-3]
     }, 
     'SGD': {
         'get': lambda : lambda : SGD(learning_rate=0.001, momentum=0.9),
@@ -71,19 +72,22 @@ class FrozenEfficientnetb4:
 
     size = 224
 
-    def __init__(self, dropout):
+    def __init__(self, freeze):
         base_model = EfficientNetB4(weights=WEIGHTS, include_top=False, input_shape=(self.size, self.size, 3))
 
         base_model.trainable = True
 
-        for layer in base_model.layers:
+        total = len(base_model.layers)
+        index = math.ceil(total *freeze)
+
+        for layer in base_model.layers[0:index]:
             layer.trainable = False
 
         output = GlobalAveragePooling2D()(base_model.output)
         output = Dense(512)(output)
         output = BatchNormalization()(output)
         output = Activation(ACTIVATION)(output)
-        output = Dropout(dropout)(output)
+        output = Dropout(0.5)(output)
         output = Dense(102)(output)
         output = Activation(FINAL_ACTIVATION, dtype='float32', name='predictions')(output)
         self.model = Model(inputs=base_model.input, outputs=output)

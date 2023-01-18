@@ -1,24 +1,3 @@
-#python3 trainer.py --epoch 6 --da --mp --arch vgg16 --batch 16 --step 2 --opt SGD --clr triangular
-#python3 trainer.py --epoch 6 --mp --arch vgg16 --batch 16 --step 2 --opt SGD --clr triangular
-#python3 trainer.py --epoch 6 --da --mp --arch vgg16 --batch 16 --step 2 --opt Adam --clr triangular 
-#python3 trainer.py --epoch 6 --mp --arch vgg16 --batch 16 --step 2 --opt Adam --clr triangular
-#python3 trainer.py --epoch 6 --da --mp --arch vgg16 --batch 16 --step 4 --opt SGD --clr triangular
-#python3 trainer.py --epoch 6 --mp --arch vgg16 --batch 16 --step 4 --opt SGD --clr triangular
-#python3 trainer.py --epoch 6 --da --mp --arch vgg16 --batch 16 --step 4 --opt Adam --clr triangular 
-#python3 trainer.py --epoch 6 --mp --arch vgg16 --batch 16 --step 4 --opt Adam --clr triangular
+python3 trainer.py --epoch 50 --da --arch efficientnetb4 --batch 16 --opt Adam --clr triangular2 --clr triangular2 --step 4
 
-#python3 trainer.py --epoch 6 --mp --arch resnet18 --batch 16 --step 4 --opt SGD --clr triangular
-#python3 trainer.py --epoch 6 --da --mp --arch resnet18 --batch 16 --step 4 --opt SGD --clr triangular
-#python3 trainer.py --epoch 6 --mp --arch resnet18 --batch 16 --step 4 --opt Adam --clr triangular 
-#python3 trainer.py --epoch 6 --da --mp --arch resnet18 --batch 16 --step 4 --opt Adam --clr triangular
-#python3 trainer.py --epoch 6 --mp --arch resnet18 --batch 16 --step 4 --opt SGD --clr triangular
-#python3 trainer.py --epoch 6 --da --mp --arch resnet18 --batch 16 --step 4 --opt SGD --clr triangular
-#python3 trainer.py --epoch 6 --mp --arch resnet18 --batch 16 --step 4 --opt Adam --clr triangular 
-#python3 trainer.py --epoch 6 --da --mp --arch resnet18 --batch 16 --step 4 --opt Adam --clr triangular
-
-python3 trainer.py --epoch 6 --da --arch inceptionv3 --batch 16 --opt Adam --clr triangular
-python3 trainer.py --epoch 6 --da --arch inceptionv3 --batch 8 --opt Adam --clr triangular
-python3 trainer.py --epoch 6 --da --arch inceptionv3 --batch 4 --opt Adam --clr triangular
-python3 trainer.py --epoch 6 --da --arch inceptionv3 --batch 16 --opt SGD --clr triangular
-python3 trainer.py --epoch 6 --da --arch inceptionv3 --batch 8 --opt SGD --clr triangular
-python3 trainer.py --epoch 6 --da --arch inceptionv3 --batch 4 --opt SGD --clr triangular
+python3 trainer.py --epoch 50 --da --arch frozenefficientnetb4 --batch 16 --opt Adam --clr triangular --dropout 0.1 --clr triangular2 --step 4

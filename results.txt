@@ -213,3 +213,44 @@ loss	efficientnetb4	16	2.0	Adam	triangular	0.36129888892173767
 accuracy	resnet18	64	2.0	Adam	triangular	0.8764705657958984
 loss	resnet18	64	2.0	Adam	triangular	0.5804650783538818
 
+
+
+accuracy	efficientnetb4	16	4.0	Adam	triangular2	0.9392156600952148
+loss	efficientnetb4	16	4.0	Adam	triangular2	0.2685525119304657
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9411764740943909
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.26127636432647705
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9225490093231201
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.34020376205444336
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9343137145042419
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.29673799872398376
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9323529601097107
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.28224673867225647
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9323529601097107
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.30693140625953674
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9264705777168274
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.3079027235507965
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.929411768913269
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.2941286563873291
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9196078181266785
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.3461659550666809
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9127451181411743
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.3721556067466736
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.820588231086731
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.7401440143585205
+
+accuracy	efficientnetb4	16	4.0	Adam	triangular2	0.9411764740943909
+loss	efficientnetb4	16	4.0	Adam	triangular2	0.25966352224349976
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9313725233078003
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.27460047602653503
+
