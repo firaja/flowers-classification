@@ -31,12 +31,14 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass[12pt]{article}
+\documentclass[12pt, xcolor=table]{article}
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
+\usepackage{multirow}
+
 
 \begin{document}
 
@@ -165,13 +167,12 @@ In order to raise the number of samples it was used \texttt{ImageDataGenerator} 
 \item{Shift of brightness $\gamma \in [0.7, 1.3]$}
 \item{Zoom  $\zeta \in [0.8, 1.2]$}
 \end{itemize}
-Additionally every image is transformed with the original preprocessing function used for the training of the original architecture on \textit{ImageNet}.\todo{preprocessing}
-
+Additionally every image is transformed with the original preprocessing function used for the training of the original architecture on \textit{ImageNet}. In Sections \ref{sec:resnet18}, \ref{sec:inceptionv3} and \ref{sec:efficientnetb4} there are more details about it.
 
 
 \subsection{Hyper-parameters}
 To train the perceptron on the extracted features it was decided to use the SGD with momentum $\beta = 0.9$ or Adam with $\beta_1 = 0.9$ and $\beta_2 = 0.999$, with dimension of
-batch equal to $64$ and momentum equal to 0.9. 
+batch equal to $64$.
 Since the task is a classification over multiple categories the chosen objective function to minimize was \emph{categorical cross-entropy}. \par
 
 The learning rate $\eta$ is calculated according to the algorithm described in \emph{"Cyclical Learning Rates for Training Neural
@@ -180,29 +181,29 @@ back in a fixed interval $I$ at each iteration during the training phase;
 this strategy had a dual purpose: to reduce the bias introduced by choosing a non-optimal $\eta$ during the design phase and to help the optimizer to escape from saddle points or 
 from local minima that could block its correct covergence.\par
 
-To calculate the aforementioned interval $I$ of values the authors described the following algorithm:
+To calculate the aforementioned interval $I$ of values the authors described the \textit{Learning Rate Finder} algorithm (LRF):
 \begin{enumerate}
 \item{Choose an interval $J$ on which to make vary $\eta$. For this work $I = [10^{-10}, 10^{-1}]$ was used} 
 \item{Train the model for few epochs (\textit{e.g.} 10) starting with the smallest ${\eta}' \in J$. At the end of each epoch exponentially increase ${\eta}'$}
-\item{Stop the training when $\eta$ reached the upper bound of $J$}
+\item{Stop the training when ${\eta}'$ reached the upper bound of $J$}
 \item{Plot the fluctuation of the loss function realtive to ${\eta}'$}
 \end{enumerate}
-As an example, the algorithm generated the plot in Figure \ref{fig:lr} for optimizer Adam and the architecture described in section \todo{section}. 
+As an example, the algorithm generated the plot in Figure \ref{fig:lr} for optimizer Adam and the architecture described in section \ref{sec:resnet18}. 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.8\textwidth]{images/lr_adam.png} 
+\includegraphics[width=0.7\textwidth]{images/lr_adam.png} 
 \caption{Output of the learning rate finder algorithm. $I=[10^{-5}, 10^{-3}]$ is the optimal solution}
 \label{fig:lr}
 \end{figure}
 
-The graph show how the network begins to learn starting from $\eta \simeq 10^{-5}$ and diverges once $\eta$ exceeded $\sim10^{-3}$; these two values were used as extremes of $I$ for the cyclical learning rate algorithm on this particular architecture.\par
+The graph shows how the network begins to learn starting from $\eta \simeq 10^{-5}$ and diverges once $\eta$ exceeded $\sim10^{-3}$; these two values were used as extremes of $I$ for the cyclical learning rate algorithm on this particular architecture.\par
 The drawback of this strategy is that it added two additional hyper-parameters: the step size $s$, that determined the number of iterations required to go from the minimum $\eta$ to the maximum, and the cyclical learning rate schedule, that defined the way $\eta$ is modified. \par
 
 Figure \ref{fig:triangular} shows the two schedules used for this work: \emph{Triangular} and \emph{Triangular2};
 the difference between the two is that the second method halves the upper bound of $I$ at each cycle completion.
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=1\textwidth]{images/triangular.png} 
+\includegraphics[width=0.8\textwidth]{images/triangular.png} 
 \caption{Plot of the learning rate with \emph{Triangular} and \emph{Triangular2} methods}
 \label{fig:triangular}
 \end{figure}
@@ -214,17 +215,17 @@ the difference between the two is that the second method halves the upper bound 
 
 
 
-\subsection{Experiment 1: Choice of the architecture}
+\subsection{Experiment 1: Choice of the architecture}\label{sec:exp1}
 The first experiment aimed to find the architecture that could achieve the best accuracy on the test set. This work tested \textit{ResNet18}, \textit{InceptionV3} and 
 \textit{EfficientNetB4}. All of them presented diffent peculiarities and could be used for training with the available hardware. \par
-Since the training on \textit{ImageNet} of the networks is not sufficient to use them as feature extractors, the entire networks were fine-tuned in order to update their weights and to fit better the task.
+Since the training on \textit{ImageNet} of the networks is not sufficient to use them as feature extractors, these networks were fine-tuned in order to update their weights and to fit better the task.
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=1\textwidth]{images/architecture.png} 
 \caption{Plot of the learning rate with \emph{Triangular} and \emph{Triangular2} methods}
 \label{fig:architecture}
 \end{figure}
-To each networks the original classification layers were removed and substituted with a new classifier composed by the following layers:
+For each networks the original classification layers were removed and substituted with a new classifier composed by the following layers:
 \begin{enumerate}
 \item{\textbf{Global Average Pooling}: instead of using a Flatten layer that could raise the risk of overfitting and forced the use of Dropout, this layer applied average pooling on the spatial dimensions until each spatial dimension is one, and leaves other dimensions unchanged. It added 0 new parameters to the model} 
 \item{\textbf{Dense 512}: a dense layer with a \textbf{Batch Normalization} before the activation function (ReLU). This helped to avoid vanishing/exploding gradients when training the model. It added $512 \cdot (n+1) + 4\cdot512 = 512n + 2\,560$ parameters}
@@ -250,7 +251,7 @@ The preprocessing function applied on the images scaled their pixels between -1 
 From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-5}, 10^{-2}]$ for SGD and $[10^{-3}, 10^{-3}]$ for Adam.
 
 
-\subsubsection{Fine-tuning of EfficientNetB4}\label{sec:efficientb4}
+\subsubsection{Fine-tuning of EfficientNetB4}\label{sec:efficientnetb4}
 EfficientNetB4 is a convolutional neural network that is 237 layers deep and accepts images of input size of $224 \times 224$. 
 This type of architecture was built using automatic search and scaling techniques
 aimed to simultaneously maximize the accuracy of the network and the number of operations per second. \par
@@ -269,7 +270,7 @@ that shows the main component identified by the network.
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=1\textwidth]{images/grad_multi.png} 
-\caption{\textit{grad-CAM} of multiple flowers}
+\caption{\textit{grad-CAM} of multiple flowers extracted from EfficientNetB4}
 \label{fig:grad_multi}
 \end{figure}
 
@@ -282,13 +283,23 @@ Like the \textit{grad-CAM}, \textit{Saliency Maps} analyze a specific layer of t
 an image with respect with the label. The map indicates the points that affected more the correct classification of the image.
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=1\textwidth]{images/sal_bee.png} 
-\caption{\textit{Saliency Map} of a flower flown over by a bee}
-\label{fig:sal_bee}
+\includegraphics[width=1\textwidth]{images/sal.png} 
+\caption{Example of \textit{Saliency Map} extracted from EfficientNetB4}
+\label{fig:sal}
 \end{figure}
-For example Figure \ref{fig:sal_bee} indicated that the bee flying over the flower didn't affect the classification and the model stayed focus on the flower petals.
+
+As can be seen in figure \ref{fig:sal} most of the pixels that affect the
+classification is contained within the flower and this is a good indicator
+of the quality of the model.
 
 
+
+
+
+
+
+\subsection{Experiment 2: Freeze layers}\label{sec:exp2}
+The aim of this second experiment was to find a good trade-off between the number of trainable parameters and test accuracy: after choosing the best model from Section \ref{sec:exp1}, its layers were frozon so that the weight would not be updated during training. The layers were frozen starting from the input to the deeper layers and because the training dataset is small and different from \textit{ImageNet} dataset it made sense to freeze only a small portion of layers. The number of frozen layers was increased unitil it reached the $25\%$ of the total.
 
 \section{Results and Evaluation}
 The Results section is dedicated to presenting the actual results (i.e. measured and calculated quantities), not to discussing their meaning or interpretation. The results should be summarized using appropriate Tables and Figures (graphs or schematics). Every Figure and Table should have a legend that describes concisely what is contained or shown. Figure legends go below the figure, table legends above the table. Throughout the report, but especially in this section, pay attention to reporting numbers with an appropriate number of significant figures. 
@@ -305,5 +316,196 @@ Conclusions should summarize the central points made in the Discussion section, 
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
+
+
+
+
+
+
+
+\newpage
+\appendix
+\section{Exerimental results}
+
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+% \usepackage{graphicx}
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[{beamer}
+\begin{table}[]
+\centering
+\caption{}
+\label{tab:my-table}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|ccll|ccll|ccll|}
+\hline
+\rowcolor[HTML]{3166FF} 
+\multicolumn{4}{|c|}{\cellcolor[HTML]{3166FF}{\color[HTML]{FFFFFF} \textbf{ResNet-18}}} &
+  \multicolumn{4}{c|}{\cellcolor[HTML]{3166FF}{\color[HTML]{FFFFFF} \textbf{InceptionV3}}} &
+  \multicolumn{4}{c|}{\cellcolor[HTML]{3166FF}{\color[HTML]{FFFFFF} \textbf{EfficientNetB4}}} \\ \hline
+\rowcolor[HTML]{DAE8FC} 
+\multicolumn{1}{|l|}{\cellcolor[HTML]{DAE8FC}\textbf{Optimizer}} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Scheduler}} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Step size}} &
+  \textbf{Test accuracy} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Optimizer}} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Scheduler}} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Step size}} &
+  \textbf{Test accuracy} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Optimizer}} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Scheduler}} &
+  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Step size}} &
+  \textbf{Test accuracy} \\ \hline
+\multicolumn{1}{|c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{2} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{2} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{2} &
+   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
+\multicolumn{1}{|c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{4} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{4} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{4} &
+   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
+\multicolumn{1}{|c|}{} &
+  \multicolumn{1}{c|}{\multirow{-3}{*}{Traingular}} &
+  \multicolumn{1}{l|}{8} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{\multirow{-3}{*}{Traingular}} &
+  \multicolumn{1}{l|}{8} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{\multirow{-3}{*}{Traingular}} &
+  \multicolumn{1}{l|}{8} &
+   \\ \cline{2-4} \cline{6-8} \cline{10-12} 
+\multicolumn{1}{|c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{2} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{2} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{2} &
+   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
+\multicolumn{1}{|c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{4} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{4} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{4} &
+   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
+\multicolumn{1}{|c|}{\multirow{-6}{*}{SGD}} &
+  \multicolumn{1}{c|}{\multirow{-3}{*}{Triangular2}} &
+  \multicolumn{1}{l|}{8} &
+   &
+  \multicolumn{1}{c|}{\multirow{-6}{*}{SGD}} &
+  \multicolumn{1}{c|}{\multirow{-3}{*}{Triangular2}} &
+  \multicolumn{1}{l|}{8} &
+   &
+  \multicolumn{1}{c|}{\multirow{-6}{*}{SGD}} &
+  \multicolumn{1}{c|}{\multirow{-3}{*}{Triangular2}} &
+  \multicolumn{1}{l|}{8} &
+   \\ \hline
+\multicolumn{1}{|c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{2} &
+  \cellcolor[HTML]{9AFF99}{\color[HTML]{333333} \textbf{86.39\%}} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{2} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{2} &
+   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
+\multicolumn{1}{|c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{4} &
+  85.78\% &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{4} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{4} &
+   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
+\multicolumn{1}{|c|}{} &
+  \multicolumn{1}{c|}{\multirow{-3}{*}{Traingular}} &
+  \multicolumn{1}{l|}{8} &
+  85.65\% &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{\multirow{-3}{*}{Traingular}} &
+  \multicolumn{1}{l|}{8} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{\multirow{-3}{*}{Traingular}} &
+  \multicolumn{1}{l|}{8} &
+   \\ \cline{2-4} \cline{6-8} \cline{10-12} 
+\multicolumn{1}{|c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{2} &
+  82.48\% &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{2} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{2} &
+   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
+\multicolumn{1}{|c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{4} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{4} &
+   &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{c|}{} &
+  \multicolumn{1}{l|}{4} &
+   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
+\multicolumn{1}{|c|}{\multirow{-6}{*}{Adam}} &
+  \multicolumn{1}{c|}{\multirow{-3}{*}{Triangular2}} &
+  \multicolumn{1}{l|}{8} &
+   &
+  \multicolumn{1}{c|}{\multirow{-6}{*}{Adam}} &
+  \multicolumn{1}{c|}{\multirow{-3}{*}{Triangular2}} &
+  \multicolumn{1}{l|}{8} &
+   &
+  \multicolumn{1}{c|}{\multirow{-6}{*}{Adam}} &
+  \multicolumn{1}{c|}{\multirow{-3}{*}{Triangular2}} &
+  \multicolumn{1}{l|}{8} &
+   \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+
+
+
 
 \end{document}
