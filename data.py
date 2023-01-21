@@ -2,7 +2,6 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
-import cv2
 
 """
 Total params: 18,646,213
@@ -49,24 +48,27 @@ Trainable params: 971,366
 l, u = 1e-5, 1e-3
 
 
-x = [i*100 for i in range(10)]
-y = [l if i%2==0 else u for i in range(10)]
-y2 = [l, u, l, u/2, l, u/4, l, u/8, l, u/16]
+x = [i*0.1 for i in range(11)]
+y1 = [0.9492156600952148, 0.9411764740943909, 0.9225490093231201, 0.9343137145042419, 0.9323529601097107, 0.9323529601097107, 0.9264705777168274, 0.929411768913269, 0.9196078181266785, 0.9127451181411743, 0.820588231086731]
+y2 = [200, 152, 125, 120,  120,  119,  118,  117,  116, 115, 113]
+y2 = [i*5 for i in y2]
 
 
 
 
-fig = plt.figure(figsize=(14, 7))
-gs = fig.add_gridspec(1, 2, hspace=0, wspace=0)
-(ax1, ax2) = gs.subplots(sharex=True, sharey='row')
+fig, ax1 = plt.subplots()
 
+ax2 = ax1.twinx()
+l1 = ax1.plot(x, y1, 'g-', label="Accuracy")
+l2 = ax2.plot(x, y2, 'r-', label="Time (s)")
 
+ax1.set_xlabel('Dropout rate')
+ax1.set_ylabel('Accuracy')
+ax2.set_ylabel('Time (s)')
+ax1.grid()
+plt.xticks(np.arange(0, 1.1, 0.1))
+plt.xlim([0, 1])
+ax2.set_ylim([0, 1000])
 
-ax1.plot(x, y, label="sine")
-ax1.set_title("Triangular")
-ax2.set_title("Triangular2")
-fig.text(0.5, 0.03, 'Training iterations', ha='center')
-fig.text(0.05, 0.5, 'Learning rate', va='center', rotation='vertical')
-ax2.plot(x, y2, color='orange', label="sine")
-
+ax1.legend(l1+l2, ["Accuracy", "Training time"])
 plt.show()

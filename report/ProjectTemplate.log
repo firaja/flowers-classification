@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.7.4)  20 JAN 2023 22:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.7.4)  21 JAN 2023 11:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1052,15 +1052,26 @@ File: images/sal.png Graphic file (type png)
 <use images/sal.png>
 Package pdftex.def Info: images/sal.png  used on input line 290.
 (pdftex.def)             Requested size: 390.0pt x 156.73924pt.
- [7] [8 <./images/grad_multi.png> <./images/sal.png>] (./ProjectTemplate.bbl [9
-]) [10]
+ [7] [8 <./images/grad_multi.png> <./images/sal.png>]
+<images/param_acc.png, id=61, 462.528pt x 346.896pt>
+File: images/param_acc.png Graphic file (type png)
+<use images/param_acc.png>
+Package pdftex.def Info: images/param_acc.png  used on input line 338.
+(pdftex.def)             Requested size: 187.19833pt x 140.40211pt.
+<images/time_acc.png, id=62, 462.528pt x 346.896pt>
+File: images/time_acc.png Graphic file (type png)
+<use images/time_acc.png>
+Package pdftex.def Info: images/time_acc.png  used on input line 343.
+(pdftex.def)             Requested size: 187.19833pt x 140.40211pt.
+ [9 <./images/param_acc.png> <./images/time_acc.png>]
+(./ProjectTemplate.bbl) [10]
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 383.
+               Default added (so using `tbp') on input line 399.
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 408.
+               Default added (so using `tbp') on input line 424.
 
 [11] [12] (./ProjectTemplate.aux)
 
@@ -1068,10 +1079,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 14409 strings out of 479719
- 295035 string characters out of 5880575
- 582393 words of memory out of 5000000
- 32130 multiletter control sequences out of 15000+600000
+ 14425 strings out of 479719
+ 295378 string characters out of 5880575
+ 582409 words of memory out of 5000000
+ 32144 multiletter control sequences out of 15000+600000
  478259 words of font info for 59 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
  99i,12n,94p,735b,796s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1090,10 +1101,10 @@ onts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2022basic/texmf-dis
 t/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2022basic/texmf
 -dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2022basic/t
 exmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb>
-Output written on ProjectTemplate.pdf (13 pages, 3610766 bytes).
+Output written on ProjectTemplate.pdf (13 pages, 3672136 bytes).
 PDF statistics:
- 130 PDF objects out of 1000 (max. 8388607)
+ 134 PDF objects out of 1000 (max. 8388607)
  75 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 48 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 58 words of extra memory for PDF output out of 10000 (max. 10000000)
 
