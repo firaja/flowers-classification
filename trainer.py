@@ -141,7 +141,7 @@ if __name__ == '__main__':
                                   steps_per_epoch=step_size_train,
                                   validation_data=validation_preprocessed,
                                   validation_steps=step_size_valid,
-                                  callbacks=[clr, mcp_save_acc, mcp_save_loss, es],
+                                  callbacks=[clr]#, mcp_save_acc, mcp_save_loss, es],
                                   #workers=64,
                                   #use_multiprocessing=False,
                                   #max_queue_size=32
