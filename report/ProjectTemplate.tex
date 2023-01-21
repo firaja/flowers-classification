@@ -31,14 +31,15 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass[12pt, xcolor=table]{article}
+\documentclass[12pt]{article}
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{multirow}
-
+\usepackage{bigstrut}
+\usepackage{xcolor}
 
 \begin{document}
 
@@ -299,10 +300,14 @@ of the quality of the model.
 
 
 \subsection{Experiment 2: Freeze layers}\label{sec:exp2}
-The aim of this second experiment was to find a good trade-off between the number of trainable parameters and test accuracy: after choosing the best model from Section \ref{sec:exp1}, its layers were frozon so that the weight would not be updated during training. The layers were frozen starting from the input to the deeper layers and because the training dataset is small and different from \textit{ImageNet} dataset it made sense to freeze only a small portion of layers. The number of frozen layers was increased unitil it reached the $25\%$ of the total.
+The aim of this second experiment was to find a good trade-off between the number of trainable parameters and test accuracy: after choosing the best model from Section \ref{sec:exp1}, its layers were frozon so that the weight would not be updated during training. The layers were frozen starting from the input to the deeper layers and because the training dataset is small and different from \textit{ImageNet} dataset it made sense to freeze only a small portion of layers.
 
 \section{Results and Evaluation}
-The Results section is dedicated to presenting the actual results (i.e. measured and calculated quantities), not to discussing their meaning or interpretation. The results should be summarized using appropriate Tables and Figures (graphs or schematics). Every Figure and Table should have a legend that describes concisely what is contained or shown. Figure legends go below the figure, table legends above the table. Throughout the report, but especially in this section, pay attention to reporting numbers with an appropriate number of significant figures. 
+This section reports the results obtained on the test set when
+the best trained models are used as well as on training also on
+validation set. The results are shown in table 3.
+
+
 
 \section{Discussion}
 The discussion section aims at interpreting the results in light of the project's objectives. The most important goal of this section is to interpret the results so that the reader is informed of the insight or answers that the results provide. This section should also present an evaluation of the particular approach taken by the group. For example: Based on the results, how could the experimental procedure be improved? What additional, future work may be warranted? What recommendations can be drawn?
@@ -327,185 +332,80 @@ Conclusions should summarize the central points made in the Discussion section, 
 \appendix
 \section{Exerimental results}
 
-% Please add the following required packages to your document preamble:
-% \usepackage{multirow}
-% \usepackage{graphicx}
-% \usepackage[table,xcdraw]{xcolor}
-% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[{beamer}
-\begin{table}[]
+
+\begin{table}[ht!]
 \centering
 \caption{}
 \label{tab:my-table}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{|ccll|ccll|ccll|}
+\begin{tabular}{|ccll|}
 \hline
-\rowcolor[HTML]{3166FF} 
-\multicolumn{4}{|c|}{\cellcolor[HTML]{3166FF}{\color[HTML]{FFFFFF} \textbf{ResNet-18}}} &
-  \multicolumn{4}{c|}{\cellcolor[HTML]{3166FF}{\color[HTML]{FFFFFF} \textbf{InceptionV3}}} &
-  \multicolumn{4}{c|}{\cellcolor[HTML]{3166FF}{\color[HTML]{FFFFFF} \textbf{EfficientNetB4}}} \\ \hline
-\rowcolor[HTML]{DAE8FC} 
-\multicolumn{1}{|l|}{\cellcolor[HTML]{DAE8FC}\textbf{Optimizer}} &
-  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Scheduler}} &
-  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Step size}} &
-  \textbf{Test accuracy} &
-  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Optimizer}} &
-  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Scheduler}} &
-  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Step size}} &
-  \textbf{Test accuracy} &
-  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Optimizer}} &
-  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Scheduler}} &
-  \multicolumn{1}{l|}{\cellcolor[HTML]{DAE8FC}\textbf{Step size}} &
-  \textbf{Test accuracy} \\ \hline
-\multicolumn{1}{|c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{2} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{2} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{2} &
-   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
-\multicolumn{1}{|c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{4} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{4} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{4} &
-   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
-\multicolumn{1}{|c|}{} &
-  \multicolumn{1}{c|}{\multirow{-3}{*}{Traingular}} &
-  \multicolumn{1}{l|}{8} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{\multirow{-3}{*}{Traingular}} &
-  \multicolumn{1}{l|}{8} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{\multirow{-3}{*}{Traingular}} &
-  \multicolumn{1}{l|}{8} &
-   \\ \cline{2-4} \cline{6-8} \cline{10-12} 
-\multicolumn{1}{|c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{2} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{2} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{2} &
-   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
-\multicolumn{1}{|c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{4} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{4} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{4} &
-   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
-\multicolumn{1}{|c|}{\multirow{-6}{*}{SGD}} &
-  \multicolumn{1}{c|}{\multirow{-3}{*}{Triangular2}} &
-  \multicolumn{1}{l|}{8} &
-   &
-  \multicolumn{1}{c|}{\multirow{-6}{*}{SGD}} &
-  \multicolumn{1}{c|}{\multirow{-3}{*}{Triangular2}} &
-  \multicolumn{1}{l|}{8} &
-   &
-  \multicolumn{1}{c|}{\multirow{-6}{*}{SGD}} &
-  \multicolumn{1}{c|}{\multirow{-3}{*}{Triangular2}} &
-  \multicolumn{1}{l|}{8} &
-   \\ \hline
-\multicolumn{1}{|c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{2} &
-  \cellcolor[HTML]{9AFF99}{\color[HTML]{333333} \textbf{86.39\%}} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{2} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{2} &
-   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
-\multicolumn{1}{|c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{4} &
-  85.78\% &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{4} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{4} &
-   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
-\multicolumn{1}{|c|}{} &
-  \multicolumn{1}{c|}{\multirow{-3}{*}{Traingular}} &
-  \multicolumn{1}{l|}{8} &
-  85.65\% &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{\multirow{-3}{*}{Traingular}} &
-  \multicolumn{1}{l|}{8} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{\multirow{-3}{*}{Traingular}} &
-  \multicolumn{1}{l|}{8} &
-   \\ \cline{2-4} \cline{6-8} \cline{10-12} 
-\multicolumn{1}{|c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{2} &
-  82.48\% &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{2} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{2} &
-   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
-\multicolumn{1}{|c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{4} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{4} &
-   &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{c|}{} &
-  \multicolumn{1}{l|}{4} &
-   \\ \cline{3-4} \cline{7-8} \cline{11-12} 
-\multicolumn{1}{|c|}{\multirow{-6}{*}{Adam}} &
-  \multicolumn{1}{c|}{\multirow{-3}{*}{Triangular2}} &
-  \multicolumn{1}{l|}{8} &
-   &
-  \multicolumn{1}{c|}{\multirow{-6}{*}{Adam}} &
-  \multicolumn{1}{c|}{\multirow{-3}{*}{Triangular2}} &
-  \multicolumn{1}{l|}{8} &
-   &
-  \multicolumn{1}{c|}{\multirow{-6}{*}{Adam}} &
-  \multicolumn{1}{c|}{\multirow{-3}{*}{Triangular2}} &
-  \multicolumn{1}{l|}{8} &
-   \\ \hline
-\end{tabular}%
-}
+\multicolumn{4}{|c|}{\textbf{ResNet-18}}                                          \\ \hline
+\multicolumn{1}{|l|}{\textbf{Optimizer}}    & \multicolumn{1}{l|}{\textbf{Scheduler}}           & \multicolumn{1}{l|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{l|}{2}                  &                        \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{l|}{2}                  &                        \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{l|}{2}                  & \textbf{86.39\%}       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} & 85.78\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} & 85.65\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{l|}{2}                  & 82.48\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \hline
+\end{tabular}
 \end{table}
 
 
 
+
+\begin{table}[]
+\centering
+\caption{}
+\label{tab:my-table}
+\begin{tabular}{|ccll|}
+\hline
+\multicolumn{4}{|c|}{\textbf{ResNet-18}}                                          \\ \hline
+\multicolumn{1}{|l|}{\textbf{Optimizer}}    & \multicolumn{1}{l|}{\textbf{Scheduler}}           & \multicolumn{1}{l|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{l|}{2}                  &                        \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{l|}{2}                  &                        \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{l|}{2}                  & \textbf{86.39\%}       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} & 85.78\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} & 85.65\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{l|}{2}                  & 82.48\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[]
+\centering
+\caption{}
+\label{tab:my-table}
+\begin{tabular}{|ccll|}
+\hline
+\multicolumn{4}{|c|}{\textbf{ResNet-18}}                                          \\ \hline
+\multicolumn{1}{|l|}{\textbf{Optimizer}}    & \multicolumn{1}{l|}{\textbf{Scheduler}}           & \multicolumn{1}{l|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{l|}{2}                  &                        \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{l|}{2}                  &                        \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{l|}{2}                  & \textbf{86.39\%}       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} & 85.78\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} & 85.65\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{l|}{2}                  & 82.48\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \hline
+\end{tabular}
+\end{table}
 
 
 \end{document}
