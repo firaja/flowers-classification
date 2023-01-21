@@ -12,6 +12,7 @@ from clr_callback import CyclicLR
 import tensorflow_datasets as tfds
 import tensorflow_hub as hub
 from processing import Processing
+import time
 
 np.random.seed(42)
 tf.random.set_seed(42)
@@ -65,6 +66,7 @@ if __name__ == '__main__':
     model = architecture.get_model()
     
     model.summary(show_trainable=True)
+
     target_size = architecture.size
 
 
@@ -125,8 +127,12 @@ if __name__ == '__main__':
                         patience=10, 
                         mode='max', 
                         #restore_best_weights=True, 
-                        min_delta=0.01,
+                        min_delta=0.005,
                         verbose=1)
+
+
+    start_time = time.time()
+
 
     # Train
     history = model.fit(train_preprocessed,
@@ -135,11 +141,13 @@ if __name__ == '__main__':
                                   steps_per_epoch=step_size_train,
                                   validation_data=validation_preprocessed,
                                   validation_steps=step_size_valid,
-                                  callbacks=[clr, mcp_save_acc, mcp_save_loss]#, es],
+                                  callbacks=[clr, mcp_save_acc, mcp_save_loss, es],
                                   #workers=64,
                                   #use_multiprocessing=False,
                                   #max_queue_size=32
                                   )
+
+    total_time = time.time() - start_time
 
     os.makedirs(utils.get_path(config['paths']['plot']['base'].format(args.arch)), exist_ok=True)    
 
@@ -176,6 +184,7 @@ if __name__ == '__main__':
     # Save results
     with open('results.txt', 'a') as f:
         f.write('accuracy\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(args.arch, args.batch, args.step, args.opt, args.clr, accuracy))
-        f.write('loss\t{}\t{}\t{}\t{}\t{}\t{}\n\n'.format(args.arch, args.batch, args.step, args.opt, args.clr, loss))        
+        f.write('loss\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(args.arch, args.batch, args.step, args.opt, args.clr, loss))
+        f.write('--- {}ms ---\n\n'.format(total_time))      
 
     
