@@ -260,3 +260,72 @@ loss	efficientnetb4	8	4.0	Adam	triangular2	0.28280290961265564
 accuracy	efficientnetb4	8	4.0	Adam	triangular2	0.9490196108818054
 loss	efficientnetb4	8	4.0	Adam	triangular2	0.2062627077102661
 
+accuracy	efficientnetb4	16	4.0	Adam	triangular2	0.936274528503418
+loss	efficientnetb4	16	4.0	Adam	triangular2	0.2757294476032257
+--- 407.34354424476624ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9284313917160034
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.27590492367744446
+--- 509.6042730808258ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9470587968826294
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.2417861372232437
+--- 369.80527567863464ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9382352828979492
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.2689231038093567
+--- 350.6542890071869ms ---
+
+
+
+
+
+
+
+
+
+
+accuracy	efficientnetb4	16	4.0	Adam	triangular2	0.9205882549285889
+loss	efficientnetb4	16	4.0	Adam	triangular2	0.330011785030365
+--- 199.51625657081604ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9166666865348816
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.3455166220664978
+--- 152.13088083267212ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9098039269447327
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.38921886682510376
+--- 125.54213404655457ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9205882549285889
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.32984912395477295
+--- 120.87523293495178ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9127451181411743
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.3498273491859436
+--- 120.01482272148132ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9107843041419983
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.3595775067806244
+--- 119.13272905349731ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9196078181266785
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.3386182188987732
+--- 118.32477521896362ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9225490093231201
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.35530397295951843
+--- 117.25895524024963ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9205882549285889
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.37525996565818787
+--- 116.50245928764343ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.9137254953384399
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.4120754599571228
+--- 115.32400846481323ms ---
+
+accuracy	frozenefficientnetb4	16	4.0	Adam	triangular2	0.7990196347236633
+loss	frozenefficientnetb4	16	4.0	Adam	triangular2	0.8594582080841064
+--- 113.45761823654175ms ---
+
