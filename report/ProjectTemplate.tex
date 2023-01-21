@@ -31,15 +31,18 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass[12pt]{article}
+\documentclass[12pt, table,xcdraw]{article}
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage[colorinlistoftodos]{todonotes}
 \usepackage{multirow}
+%\usepackage[table,xcdraw]{xcolor}
+\usepackage[colorinlistoftodos]{todonotes}
 \usepackage{bigstrut}
-\usepackage{xcolor}
+
+
+
 
 \begin{document}
 
@@ -302,11 +305,29 @@ of the quality of the model.
 \subsection{Experiment 2: Freeze layers}\label{sec:exp2}
 The aim of this second experiment was to find a good trade-off between the number of trainable parameters and test accuracy: after choosing the best model from Section \ref{sec:exp1}, its layers were frozon so that the weight would not be updated during training. The layers were frozen starting from the input to the deeper layers and because the training dataset is small and different from \textit{ImageNet} dataset it made sense to freeze only a small portion of layers.
 
-\section{Results and Evaluation}
-This section reports the results obtained on the test set when
-the best trained models are used as well as on training also on
-validation set. The results are shown in table 3.
 
+
+
+
+
+\section{Results and Evaluation}
+This section reports the results obtained on the test set:
+
+
+\begin{table}[ht!]
+\centering
+\caption{}
+\label{tab:my-table}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+\textbf{Archtecture} & \textbf{Batch size} & \textbf{Optimizer} & \textbf{Learning rate} & \textbf{Scheduler} & \textbf{Step size} & \textbf{Test accuracy} \\ \hline
+ResNet-18      & 64 & Adam & $[10^{-5}, 10^{-3}]$ & Triangular  & 2 & 87.64\% \\ \hline
+InceptionV3    & 64 & Adam & $[10^{-5}, 10^{-3}]$ & Triangular  & 2 & 91.86\% \\ \hline
+EfficientNetB4 & 16 & Adam & $[10^{-5}, 10^{-3}]$ & Triangualr2 & 4 & 94.89\% \\ \hline
+\end{tabular}%
+}
+\end{table}
 
 
 \section{Discussion}
