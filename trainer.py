@@ -13,6 +13,9 @@ import tensorflow_datasets as tfds
 import tensorflow_hub as hub
 from processing import Processing
 import time
+from collections import Counter
+import statistics
+
 
 np.random.seed(42)
 tf.random.set_seed(42)
@@ -35,7 +38,6 @@ def parse_arguments():
     parser.add_argument('--config', type=str, const='config.yml', default='config.yml', nargs='?', help='Configuration file')
     parser.add_argument('--mp', default=False, action='store_true', help='Enable mixed precision operations (16bit-32bit)')
     parser.add_argument('--da', default=False, action='store_true', help='Enable Data Augmentation')
-    parser.add_argument('--freeze', type=float, const=0, default=0, nargs='?', help='Frozen layers')
     parser.add_argument('--epoch', type=int, const=50, default=50, nargs='?', help='Set the number of epochs')
 
     
@@ -96,6 +98,18 @@ if __name__ == '__main__':
     train_preprocessed, validation_preprocessed, test_preprocessed  = p.get_dataset()
     train_cardinality, validation_cardinality = train_preprocessed.n, validation_preprocessed.n
 
+    counter = Counter(train_preprocessed.classes)
+    plt.plot(counter.keys(), counter.values(), 'crimson', linewidth=2.5, label='Training')
+    counter = Counter(validation_preprocessed.classes)
+    plt.plot(counter.keys(), counter.values(), 'b--', linewidth=2.5, label='Validation')
+    counter = Counter(test_preprocessed.classes)
+    plt.plot(counter.keys(), counter.values(), 'limegreen', linewidth=2.5, label='Test')
+    plt.legend(loc='best')
+    plt.xlabel('Class')
+    plt.ylabel('Number of samples')
+    plt.grid(which='major', linestyle=':')
+    plt.rcParams["figure.dpi"] = 800
+    print((statistics.mean(counter.values()), (statistics.stdev(counter.values()))))
     
     # Finalize the model
     model.compile(loss=config['training']['loss'], optimizer=optimizer, metrics=['acc'])
@@ -141,7 +155,7 @@ if __name__ == '__main__':
                                   steps_per_epoch=step_size_train,
                                   validation_data=validation_preprocessed,
                                   validation_steps=step_size_valid,
-                                  callbacks=[clr]#, mcp_save_acc, mcp_save_loss, es],
+                                  callbacks=[clr, mcp_save_acc, mcp_save_loss, es],
                                   #workers=64,
                                   #use_multiprocessing=False,
                                   #max_queue_size=32

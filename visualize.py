@@ -104,7 +104,7 @@ class SaliencyMap:
 			gradient = tf.reduce_max(gradient, axis=-1)
 
 			# convert to numpy
-			gradient = gradient.numpy()
+			gradient = gradient.numpy() **0.9
 
 			# normaliz between 0 and 1
 			min_val, max_val = np.min(gradient), np.max(gradient)
@@ -166,7 +166,7 @@ if __name__ == '__main__':
 	
 	test_preprocessed  = p.from_folder('./image')
 
-	image, label = test_preprocessed.__getitem__(0)
+	image, label = test_preprocessed.__getitem__(3)
 
 	
 	img = image[0]

@@ -40,6 +40,7 @@
 %\usepackage[table,xcdraw]{xcolor}
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{bigstrut}
+\usepackage{subfigure}
 
 
 
@@ -101,7 +102,10 @@ David Bertoldi - 735213 - d.bertoldi@campus.unimib.it \\[1cm]  % Your name
 
 
 \begin{abstract}
-The ABSTRACT is not a part of the body of the report itself. Rather, the abstract is a brief summary of the report contents that is often separately circulated so potential readers can decide whether to read the report. The abstract should very concisely summarize the whole report: why it was written, what was discovered or developed, and what is claimed to be the significance of the effort. The abstract does not include figures or tables, and only the most significant numerical values or results should be given.
+This work describes a supervised approach to classification of images on a small dataset, but with a large number of classes. In particular, it is shown how the
+combination of modern training techniques and recent developments
+in the field of research of architectures for neural networks are able
+to obtain high performances even when the model is partially trained.
 \end{abstract}
 
 \section{Introduction}
@@ -127,11 +131,19 @@ The subdivision of the dataset defined in the original publication has been main
 \label{fig_dataset}
 \end{figure}
 
-Each category is represented by $10$ images in the training set and validation set, while the proportion of images for each category varies in the test set.
-The difficulty of operating on a dataset of this type is evident: the number of images for training is limited while the test set is larger. \par
+Each category is represented by $10$ images in the training set and validation set, while the proportion of images for each category varies in the test set. Figure \ref{fig:dist} plots the distribution of the three datasets: the distribution samples of the samples is non-uniform for each category, with a mean $\mu \simeq 60$ and standard deviation $\sigma \simeq 44$. In fact some classes had more than 200 samples, like  $50$ (\textit{Common Dandelion}) and $78$ (\textit{Lotus}) and other reached $20$ per class, like $1$ (\textit{Pink Primrose}), $17$ (\textit{Purple Coneflower}) or $23$ (\textit{Fritillary}).
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=0.8\textwidth]{images/dist.png} 
+\caption{Distribution of the samples for each category in each dataset}
+\label{fig:dist}
+\end{figure}
+
+The difficulty of operating on a dataset of this type is evident: the number of images for training is limited while the test set is larger. 
+
+\par
 Another peculiarity of the dataset is the presence of similar images belonging to different categories.
-
-
 
 
 
@@ -155,7 +167,7 @@ Another peculiarity of the dataset is the presence of similar images belonging t
 
 In order to classify images correctly two types of experiment were taken in accont: the first one aimed to find the best CNN\footnote{Convolutional Neural Network} architectures in 
 literature that could fit the available hardware (see Section \ref{sec:tech}) and the second tried to find a good trade-off between number of trainable layers and accuracy by freezing the layers' weights during training. \par
-All the proposed architecture were pre-trained on \textit{ImageNet} and used as feature extractors for a new classifier that operates over 102 classes.
+All the proposed architecture were pre-trained on \textit{ImageNet}\cite{5206848} and used as feature extractors for a new classifier that operates over 102 classes.
 
 \subsection{Technology and implementation}\label{sec:tech}
 The hardware used for this work was composed by a GPU NVIDIA 2070 SUPER with 8GB of VRAM, a CPU Intel i7-9700K $3.6$GHz and $32$GB of RAM. \par
@@ -175,12 +187,12 @@ Additionally every image is transformed with the original preprocessing function
 
 
 \subsection{Hyper-parameters}
-To train the perceptron on the extracted features it was decided to use the SGD with momentum $\beta = 0.9$ or Adam with $\beta_1 = 0.9$ and $\beta_2 = 0.999$, with dimension of
+To train the perceptron on the extracted features it was decided to use the SGD \cite{kiefer1952} with momentum $\beta = 0.9$ or Adam \cite{kingma2014adam} with $\beta_1 = 0.9$ and $\beta_2 = 0.999$, with dimension of
 batch equal to $64$.
 Since the task is a classification over multiple categories the chosen objective function to minimize was \emph{categorical cross-entropy}. \par
 
 The learning rate $\eta$ is calculated according to the algorithm described in \emph{"Cyclical Learning Rates for Training Neural
-Networks”}. This algorithm made $\eta$ fluctuate forward and
+Networks”} \cite{smith2015cyclical}. This algorithm made $\eta$ fluctuate forward and
 back in a fixed interval $I$ at each iteration during the training phase;
 this strategy had a dual purpose: to reduce the bias introduced by choosing a non-optimal $\eta$ during the design phase and to help the optimizer to escape from saddle points or 
 from local minima that could block its correct covergence.\par
@@ -220,8 +232,8 @@ the difference between the two is that the second method halves the upper bound 
 
 
 \subsection{Experiment 1: Choice of the architecture}\label{sec:exp1}
-The first experiment aimed to find the architecture that could achieve the best accuracy on the test set. This work tested \textit{ResNet18}, \textit{InceptionV3} and 
-\textit{EfficientNetB4}. All of them presented diffent peculiarities and could be used for training with the available hardware. \par
+The first experiment aimed to find the architecture that could achieve the best accuracy on the test set. This work tested \textit{ResNet18} \cite{he2015deep}, \textit{InceptionV3} \cite{szegedy2015going} and 
+\textit{EfficientNetB4} \cite{tan2019efficientnet}. All of them presented diffent peculiarities and could be used for training with the available hardware. \par
 Since the training on \textit{ImageNet} of the networks is not sufficient to use them as feature extractors, these networks were fine-tuned in order to update their weights and to fit better the task.
 \begin{figure}[ht!]
 \centering
@@ -252,7 +264,7 @@ From the output of the \textit{LRF} algorithm the learning rate was varied in th
 InceptionV3 is a convolutional neural network that is 42 layers deep and accepts images of input size of $299 \times 299$. This architecture factorizes the larger convolutions  into smaller ones and and uses an auxiliary classifer to propagate label information lower down the network.
  \par
 The preprocessing function applied on the images scaled their pixels between -1 and 1, sample-wise. \par
-From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-5}, 10^{-2}]$ for SGD and $[10^{-3}, 10^{-3}]$ for Adam.
+From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-5}, 10^{-2}]$ for SGD and $[10^{-4}, 10^{-2}]$ for Adam.
 
 
 \subsubsection{Fine-tuning of EfficientNetB4}\label{sec:efficientnetb4}
@@ -264,7 +276,7 @@ From the output of the \textit{LRF} algorithm the learning rate was varied in th
 
 
 \subsection{Evaluation of the training}
-To verify the quality of the training two techniques were applied: \textit{grad-CAM} and \textit{Saliency Map}. Confusion matrices as well helped indentifying
+To verify the quality of the training two techniques were applied: \textit{grad-CAM} \cite{Selvaraju_2019}  and \textit{Saliency Map} \cite{simonyan2013deep}. Confusion matrices \cite{Stehman1997} as well helped indentifying
 issues in the first stages of the implementation.
 
 \subsubsection{grad-CAM}
@@ -287,8 +299,8 @@ Like the \textit{grad-CAM}, \textit{Saliency Maps} analyze a specific layer of t
 an image with respect with the label. The map indicates the points that affected more the correct classification of the image.
 \begin{figure}[ht!]
 \centering
-\includegraphics[width=1\textwidth]{images/sal.png} 
-\caption{Example of \textit{Saliency Map} extracted from EfficientNetB4}
+\includegraphics[width=1\textwidth]{images/sal3.png} 
+\caption{Example of \textit{Saliency Map} extracted from EfficientNetB4 of a flower with an obstacle in front of it}
 \label{fig:sal}
 \end{figure}
 
@@ -303,47 +315,61 @@ of the quality of the model.
 
 
 \subsection{Experiment 2: Freeze layers}\label{sec:exp2}
-The aim of this second experiment was to find a good trade-off between the number of trainable parameters and test accuracy: after choosing the best model from Section \ref{sec:exp1}, its layers were frozon so that the weight would not be updated during training. The layers were frozen starting from the input to the deeper layers and because the training dataset is small and different from \textit{ImageNet} dataset it made sense to freeze only a small portion of layers.
-
+The aim of this second experiment was to find a good trade-off between the number of trainable parameters, test accuracy and training time: after choosing the best model from Section \ref{sec:exp1}, its layers were frozen so that the weight would not be updated during training. The layers were frozen starting from the input to the deeper layers and because the training dataset is small and different from \textit{ImageNet} dataset it was expected to have better performances when only a small portion of layers is locked. Only the feature extractor was affected by this process, while the classificator reamined fully trainable. This allowed to freeze from $10\%$ to $100\%$ of the feature extractor's layers.\par
+The results were evaluated considering, in order of importance,  the accuracy on the test dataset, the training time and the number of trainable parameters. These three parameters were chosen because the first two could be strictly related, but the third and the other two could present some interesting relation \textit{e.g.} the training time could be stable before dropping along with the accuracy.
 
 
 
 
 
 \section{Results and Evaluation}
-This section reports the results obtained on the test set:
+This section reports the results obtained for both the experiments. 
 
+
+\subsection{Experiment 1}
+
+Table \ref{tab:res} shows the configuration that gave the best results for
+ each architecture. Figure \ref{fig:cm} shows the confusion matrix on the test set for EfficientNetB4.
 
 \begin{table}[ht!]
 \centering
 \caption{}
-\label{tab:my-table}
+\label{tab:res}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{|l|l|l|l|l|l|l|}
 \hline
 \textbf{Archtecture} & \textbf{Batch size} & \textbf{Optimizer} & \textbf{Learning rate} & \textbf{Scheduler} & \textbf{Step size} & \textbf{Test accuracy} \\ \hline
 ResNet-18      & 64 & Adam & $[10^{-5}, 10^{-3}]$ & Triangular  & 2 & 87.64\% \\ \hline
-InceptionV3    & 64 & Adam & $[10^{-5}, 10^{-3}]$ & Triangular  & 2 & 91.86\% \\ \hline
+InceptionV3    & 64 & Adam & $[10^{-4}, 10^{-2}]$ & Triangular  & 2 & 91.86\% \\ \hline
 EfficientNetB4 & 16 & Adam & $[10^{-5}, 10^{-3}]$ & Triangualr2 & 4 & 94.89\% \\ \hline
 \end{tabular}%
 }
 \end{table}
 
-For the second experiment the best model was chosen
-
-
-\begin{figure}[!htb]
-   \begin{minipage}{0.48\textwidth}
-     \centering
-     \includegraphics[width=1\linewidth]{images/param_acc.png}
-     \caption{Interpolation for Data 1}\label{Fig:Data1}
-   \end{minipage}\hfill
-   \begin{minipage}{0.48\textwidth}
-     \centering
-     \includegraphics[width=1\linewidth]{images/time_acc.png}
-     \caption{Interpolation for Data 2}\label{Fig:Data2}
-   \end{minipage}
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=1\textwidth]{images/cm.png} 
+\caption{Confusion matrix of EfficientNetB4 on the test dataset}
+\label{fig:cm}
 \end{figure}
+
+\subsection{Experiment 2}
+
+
+It is immediately noticeable that EfficientNetB4 from the first experiment performed better than the other models and for this reason it was chosen for the second experiment. Figure \ref{fig:time_acc}a compares the accuracy on the test dataset and the number of trainable parameters as the number of frozen layers increased. Figure \ref{fig:time_acc}b compares accuracy and training time with respect to the number of frozen layers.
+
+
+
+
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[width=0.48\textwidth]{images/param_acc.png}} 
+    \subfigure[]{\includegraphics[width=0.48\textwidth]{images/time_acc.png}} 
+    \caption{Plot of the accuracy compared to the number of trainable parameters (a) and compared to training time (b) as the number of frozen layers varies}
+    \label{fig:time_acc}
+\end{figure}
+
+
 
 
 \section{Discussion}

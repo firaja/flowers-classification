@@ -1,4 +1,4 @@
-This is BibTeX, Version 0.99d (TeX Live 2022)
+This is BibTeX, Version 0.99d (TeX Live 2019/Debian)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: ProjectTemplate.aux
 The style file: IEEEtran.bst
@@ -11,46 +11,48 @@ Database file #1: references.bib
 -- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
 -- http://www.michaelshell.org/tex/ieeetran/bibtex/
 -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+Warning--empty booktitle in szegedy2015going
 
 Done.
-You've used 1 entry,
+You've used 11 entries,
             4087 wiz_defined-function locations,
-            828 strings with 7506 characters,
-and the built_in function-call counts, 574 in all, are:
-= -- 31
-> -- 9
-< -- 0
-+ -- 4
-- -- 2
-* -- 40
-:= -- 102
-add.period$ -- 2
-call.type$ -- 1
-change.case$ -- 1
-chr.to.int$ -- 0
-cite$ -- 1
-duplicate$ -- 42
-empty$ -- 58
-format.name$ -- 3
-if$ -- 113
+            885 strings with 9323 characters,
+and the built_in function-call counts, 6471 in all, are:
+= -- 469
+> -- 182
+< -- 28
++ -- 92
+- -- 38
+* -- 306
+:= -- 1002
+add.period$ -- 22
+call.type$ -- 11
+change.case$ -- 11
+chr.to.int$ -- 63
+cite$ -- 12
+duplicate$ -- 494
+empty$ -- 570
+format.name$ -- 47
+if$ -- 1470
 int.to.chr$ -- 0
-int.to.str$ -- 1
-missing$ -- 9
-newline$ -- 26
-num.names$ -- 1
-pop$ -- 26
+int.to.str$ -- 11
+missing$ -- 106
+newline$ -- 62
+num.names$ -- 11
+pop$ -- 289
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 37
+skip$ -- 487
 stack$ -- 0
-substring$ -- 1
-swap$ -- 22
-text.length$ -- 0
+substring$ -- 158
+swap$ -- 348
+text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 5
-type$ -- 1
-warning$ -- 0
-while$ -- 1
-width$ -- 2
-write$ -- 30
+type$ -- 11
+warning$ -- 1
+while$ -- 22
+width$ -- 13
+write$ -- 120
+(There was 1 warning)
