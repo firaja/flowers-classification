@@ -41,7 +41,8 @@
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage{bigstrut}
 \usepackage{subfigure}
-
+\usepackage{caption} 
+\captionsetup[table]{skip=8pt}
 
 
 
@@ -250,7 +251,7 @@ For each networks the original classification layers were removed and substitute
 \end{enumerate}
 
 The total number of parameters added to the original feature extractor is $512n + 54\,886$, where $n$ is the dimensionality of the last layer of the feature extractor.\par
-The strategy adopted for training is the same for all the three networks: each network is trained with 3 different step sizes, two different optimizers and 2 different learning rate schedulers. So each network is trained 12 times in order to find the best configuration. For this phase it was implemented the Early Stopping technique in order to prevent overfit and to speed up the training by stopping prematurely the process. This strategy monitored the validation accuracy and stopped everytime a model could not improve by $1\%$ in the last $10$ epochs.
+The strategy adopted for training is the same for all the three networks: each network is trained with 3 different step sizes, two different optimizers and 2 different learning rate schedulers. So each network is trained 12 times in order to find the best configuration. For this phase it was implemented the \textit{Early Stopping} technique in order to prevent overfitting and to speed up the training by stopping prematurely the process. This strategy monitored the validation accuracy and stopped everytime a model could not improve by $1\%$ in the last $10$ epochs.
 
 
 
@@ -356,7 +357,8 @@ EfficientNetB4 & 16 & Adam & $[10^{-5}, 10^{-3}]$ & Triangualr2 & 4 & 94.89\% \\
 \subsection{Experiment 2}
 
 
-It is immediately noticeable that EfficientNetB4 from the first experiment performed better than the other models and for this reason it was chosen for the second experiment. Figure \ref{fig:time_acc}a compares the accuracy on the test dataset and the number of trainable parameters as the number of frozen layers increased. Figure \ref{fig:time_acc}b compares accuracy and training time with respect to the number of frozen layers.
+It is immediately noticeable that EfficientNetB4 from the first experiment performed better than the other models and for this reason it was chosen for the second experiment. Figure \ref{fig:time_acc}a compares the accuracy on the test dataset and the number of trainable parameters as the number of frozen layers increased. Figure \ref{fig:time_acc}b compares accuracy and training time with respect to the number of frozen layers. \par 
+In order to have an accurate estimation of the timings the \textit{Early Stopping} strategy was disabled because it could terminate prematurely the training process. This limitation afflicted the accuracy because the model could have overfitted more than the regularized version.
 
 
 
@@ -373,6 +375,15 @@ It is immediately noticeable that EfficientNetB4 from the first experiment perfo
 
 
 \section{Discussion}
+\subsection{Experiment 1}
+Despite the shallowness of ResNet-18, the model based on it performed with quite high accuracy ($\sim 88\%$) but it was predictably surpassed by the other two models. In particular EfficientNetB4, that performed better on \textit{ImageNet} \cite{tan2019efficientnet}, was more efficient than \textit{InceptionV3} in terms of accuracy and number of parameters. The main obstacle represented by a small dataset was overcome by data augmentation: all the model performed with an average of $+3\%$ in accuracy. The \textit{Transfer Learning} also played a fundamental role and  without it the model would had been less stable and the training would had required more time before reaching the same qualitative results.
+
+\subsection{Experiment 2}
+
+
+\subsection{Improvements}
+
+
 The discussion section aims at interpreting the results in light of the project's objectives. The most important goal of this section is to interpret the results so that the reader is informed of the insight or answers that the results provide. This section should also present an evaluation of the particular approach taken by the group. For example: Based on the results, how could the experimental procedure be improved? What additional, future work may be warranted? What recommendations can be drawn?
 
 
