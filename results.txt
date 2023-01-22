@@ -337,3 +337,7 @@ accuracy	efficientnetb4	16	4.0	Adam	triangular2	0.9303921461105347
 loss	efficientnetb4	16	4.0	Adam	triangular2	0.27400386333465576
 --- 419.7924048900604ms ---
 
+accuracy	efficientnetb4	16	4.0	Adam	triangular2	0.9107843041419983
+loss	efficientnetb4	16	4.0	Adam	triangular2	0.3847271502017975
+--- 507.5600333213806ms ---
+
