@@ -354,7 +354,7 @@ EfficientNetB4 & 16 & Adam & $[10^{-5}, 10^{-3}]$ & Triangualr2 & 4 & 94.89\% \\
 \label{fig:cm}
 \end{figure}
 
-\subsection{Experiment 2}
+\subsection{Experiment 2}\label{sec:exp2}
 
 
 It is immediately noticeable that EfficientNetB4 from the first experiment performed better than the other models and for this reason it was chosen for the second experiment. Figure \ref{fig:time_acc}a compares the accuracy on the test dataset and the number of trainable parameters as the number of frozen layers increased. Figure \ref{fig:time_acc}b compares accuracy and training time with respect to the number of frozen layers. \par 
@@ -375,17 +375,17 @@ In order to have an accurate estimation of the timings the \textit{Early Stoppin
 
 
 \section{Discussion}
-\subsection{Experiment 1}
-Despite the shallowness of \textit{ResNet-18}, the model based on it performed with quite high accuracy ($\sim 88\%$) but it was predictably surpassed by the other two models. In particular EfficientNetB4, that performed better on \textit{ImageNet} \cite{tan2019efficientnet}, was more efficient than \textit{InceptionV3} in terms of accuracy and number of parameters. The main obstacle represented by a small dataset was overcome by data augmentation: all the model performed with an average of $+3\%$ in accuracy. The \textit{Transfer Learning} also played a fundamental role and  without it the model would had been less stable and the training would had required more time before reaching the same qualitative results.\par
-Figure \ref{fig:cm} shows that the model had more problems dealing with class 50 (\textit{Common Dandelion}) in the test dataset but this was the class with more samples and some images represents insects landed on the flower and in others the background covered more than half of the image. A strenght point of the model is that is able to recognize obstacles and foreign objects like in Figure \ref{fig:sal}.
-
-\subsection{Experiment 2}
-
-
-\subsection{Improvements}
+Despite the shallowness of \textit{ResNet-18}, the model based on it performed with quite high accuracy ($\sim 88\%$) but it was predictably surpassed by the other two models. In particular EfficientNetB4, that performed better on \textit{ImageNet} \cite{tan2019efficientnet}, was more efficient than \textit{InceptionV3} in terms of accuracy and number of parameters. The main obstacle represented by a small dataset was overcome by data augmentation: all the models performed with an average of $+3\%$ in accuracy. The \textit{Transfer Learning} also played a fundamental role and  without it the model would had been less stable and the training would had required more time before reaching the same qualitative results.\par
+Figure \ref{fig:cm} shows that the model had more problems dealing with class 50 (\textit{Common Dandelion}) in the test dataset; this was the class with more samples and some images contained insects landed on the flower and in others the background covered more than half of the image. A strenght point of the model is that is able to recognize obstacles and foreign objects like in Figure \ref{fig:sal}, where the \textit{Saliency Map} shows that the gradient were smaller along the branch.
+\par
+In the second phase models with less frozen layers performed better as expected: the shallow layers contained generic knowledge learned from \textit{ImageNet}, like lines, basic shapes, \textit{etc.} and they were useful for this new task. As the number of frozen layers increased more complex concepts reamained stored in the network nad they were less useful to the classifier
+and thus the accuracy started to drop. This behaviour is shown in Figure \ref{fig:time_acc}. The reason why on $20\%$ the accuracy dropped and then raised again it could be related to the fact that a block of layers was partially frozen and then less consistent during the training \textit{i.e.} the entire block could be capable of learning a feature, but a part of it learned from a dataset and the other from another.
+\par Finally the best model in terms of trade-off between accuracy, training time and number of trainable parameters had $30\%$ of frozen layers.\par
 
 
-The discussion section aims at interpreting the results in light of the project's objectives. The most important goal of this section is to interpret the results so that the reader is informed of the insight or answers that the results provide. This section should also present an evaluation of the particular approach taken by the group. For example: Based on the results, how could the experimental procedure be improved? What additional, future work may be warranted? What recommendations can be drawn?
+In order to improve the experiments the segmented images could be used as well, but in a parallel gated input so that the network could learn that the images without background contain just additional information about the original image and that they are not part of the original training dataset. In this way the model could reinforce the concepts learned but it could be less flexible if the secondary input layer is not designed carefully. \par
+An interesting future development of the second experiment is the implementation of pruning strategies: in this way it would be possible to find an optimal network that can be deployed in smaller devices.
+
 
 
 \section{Conclusions}
@@ -415,70 +415,70 @@ Conclusions should summarize the central points made in the Discussion section, 
 \begin{tabular}{|ccll|}
 \hline
 \multicolumn{4}{|c|}{\textbf{ResNet-18}}                                          \\ \hline
-\multicolumn{1}{|l|}{\textbf{Optimizer}}    & \multicolumn{1}{l|}{\textbf{Scheduler}}           & \multicolumn{1}{l|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{l|}{2}                  &                        \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{l|}{2}                  &                        \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{l|}{2}                  & \textbf{86.39\%}       \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} & 85.78\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} & 85.65\% \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{l|}{2}                  & 82.48\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \hline
+\multicolumn{1}{|c|}{\textbf{Optimizer}}    & \multicolumn{1}{c|}{\textbf{Scheduler}}           & \multicolumn{1}{c|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  76.27\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 75.28\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 76.04\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  26.63\%               \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 50.77\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 66.38\% \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  & \textbf{86.39\%}       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 85.78\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 85.65\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 82.48\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 84.85\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 84.72\% \\ \hline
 \end{tabular}
 \end{table}
 
 
 
 
-\begin{table}[]
+\begin{table}[ht!]
 \centering
 \caption{}
 \label{tab:my-table}
 \begin{tabular}{|ccll|}
 \hline
-\multicolumn{4}{|c|}{\textbf{ResNet-18}}                                          \\ \hline
-\multicolumn{1}{|l|}{\textbf{Optimizer}}    & \multicolumn{1}{l|}{\textbf{Scheduler}}           & \multicolumn{1}{l|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{l|}{2}                  &                        \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{l|}{2}                  &                        \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{l|}{2}                  & \textbf{86.39\%}       \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} & 85.78\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} & 85.65\% \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{l|}{2}                  & 82.48\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \hline
+\multicolumn{4}{|c|}{\textbf{IneptionV3}}                                          \\ \hline
+\multicolumn{1}{|c|}{\textbf{Optimizer}}    & \multicolumn{1}{c|}{\textbf{Scheduler}}           & \multicolumn{1}{c|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  76.27\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 75.28\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 76.04\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  26.63\%               \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 50.77\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 66.38\% \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  & \textbf{86.39\%}       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 85.78\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 85.65\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 82.48\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 84.85\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 84.72\% \\ \hline
 \end{tabular}
 \end{table}
 
 
 
-\begin{table}[]
+\begin{table}[ht!]
 \centering
 \caption{}
 \label{tab:my-table}
 \begin{tabular}{|ccll|}
 \hline
-\multicolumn{4}{|c|}{\textbf{ResNet-18}}                                          \\ \hline
-\multicolumn{1}{|l|}{\textbf{Optimizer}}    & \multicolumn{1}{l|}{\textbf{Scheduler}}           & \multicolumn{1}{l|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{l|}{2}                  &                        \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{l|}{2}                  &                        \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{l|}{2}                  & \textbf{86.39\%}       \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} & 85.78\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} & 85.65\% \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{l|}{2}                  & 82.48\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{4} &         \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{l|}{8} &         \\ \hline
+\multicolumn{4}{|c|}{\textbf{EfficientNetB4}}                                          \\ \hline
+\multicolumn{1}{|c|}{\textbf{Optimizer}}    & \multicolumn{1}{c|}{\textbf{Scheduler}}           & \multicolumn{1}{c|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  76.27\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 75.28\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 76.04\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  26.63\%               \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 50.77\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 66.38\% \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  & \textbf{86.39\%}       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 85.78\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 85.65\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 82.48\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 84.85\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 84.72\% \\ \hline
 \end{tabular}
 \end{table}
 
