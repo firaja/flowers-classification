@@ -113,7 +113,8 @@ to obtain high performances even when the model is partially trained.
 
 
 The aim of this work is to build a machine learning model able to learn from a small knowledge base and to classify similar images but belonging to different classes.
-The main issue to overcome was the high chance that the model could overfit and fail to classify unseen samples. The strategy adopted was to find the model exploiting transfer learning the best and tryed to freeze the model such that it maintained similar performances. \par
+The main issue to overcome was the high chance that the model could overfit and fail to classify unseen samples. 
+The strategy adopted was to find the model exploiting transfer learning the best and then trying to freeze the model such that it could maintain similar performances. \par
 This document describes the research on trained models, hyperparameters and generalization techniques that allowed the model to operate on a large variety of images. 
 
 
@@ -122,8 +123,8 @@ This document describes the research on trained models, hyperparameters and gene
 
 
 \section{Datasets}
-The dataset used is the \textit{102 Category Flower Dataset} \cite{Nilsback08} created by the researchers of the \textit{Visual Geometry Group} of \textit{Oxford}. The dataset is composed of $8\,189$ RGB images of variable size, each image contains one or more flowers on a neutral background and is labeled with a single category extracted from a set of $102$ possible categories. The original dataset also contains the flowers segmented from the background (Figure \ref{fig_dataset}); these images can be used for example as further input for the neural network. In this work they were not used in order to force the model to be more elastic with respect to the background of the images. \par
-The subdivision of the dataset defined in the original publication has been maintained, in particular there are $1\,020$ images in the training set, $1\,020$ images in the validation set and $6\,149$ images in the test set.
+The dataset used is the \textit{102 Category Flower Dataset} \cite{Nilsback08} created by the researchers of the \textit{Visual Geometry Group} of \textit{Oxford}. The dataset is composed of $8189$ RGB images of variable size, each image contains one or more flowers on a neutral background and is labeled with a single category extracted from a set of $102$ possible categories. The original dataset also contains the flowers segmented from the background (Figure \ref{fig_dataset}); these images can be used for example as further input for the neural network. In this work they were not used in order to force the model to be more elastic with respect to the background of the images. \par
+The subdivision of the dataset defined in the original publication has been maintained, in particular there are $1020$ images in the training set, $1020$ images in the validation set and $6149$ images in the test set.
 
 \begin{figure}[ht!]
 \centering  
@@ -245,12 +246,12 @@ Since the training on \textit{ImageNet} of the networks is not sufficient to use
 For each networks the original classification layers were removed and substituted with a new classifier composed by the following layers:
 \begin{enumerate}
 \item{\textbf{Global Average Pooling}: instead of using a Flatten layer that could raise the risk of overfitting and forced the use of Dropout, this layer applied average pooling on the spatial dimensions until each spatial dimension is one, and leaves other dimensions unchanged. It added 0 new parameters to the model} 
-\item{\textbf{Dense 512}: a dense layer with a \textbf{Batch Normalization} before the activation function (ReLU). This helped to avoid vanishing/exploding gradients when training the model. It added $512 \cdot (n+1) + 4\cdot512 = 512n + 2\,560$ parameters}
+\item{\textbf{Dense 512}: a dense layer with a \textbf{Batch Normalization} before the activation function (ReLU). This helped to avoid vanishing/exploding gradients when training the model. It added $512 \cdot (n+1) + 4\cdot512 = 512n + 2560$ parameters}
 \item{\textbf{Dropout} as regularization technique for reducing overfitting during training, with a drop rate $\rho=0.5$. It added 0 new parameters to the model}
-\item{\textbf{Dense 102}: a dense layer that used softmax as activation function. It added  $102 \cdot (512+1) = 52\,326$ new parameters}
+\item{\textbf{Dense 102}: a dense layer that used softmax as activation function. It added  $102 \cdot (512+1) = 52326$ new parameters}
 \end{enumerate}
 
-The total number of parameters added to the original feature extractor is $512n + 54\,886$, where $n$ is the dimensionality of the last layer of the feature extractor.\par
+The total number of parameters added to the original feature extractor is $512n + 54886$, where $n$ is the dimensionality of the last layer of the feature extractor.\par
 The strategy adopted for training is the same for all the three networks: each network is trained with 3 different step sizes, two different optimizers and 2 different learning rate schedulers. So each network is trained 12 times in order to find the best configuration. For this phase it was implemented the \textit{Early Stopping} technique in order to prevent overfitting and to speed up the training by stopping prematurely the process. This strategy monitored the validation accuracy and stopped everytime a model could not improve by $1\%$ in the last $10$ epochs.
 
 
@@ -389,8 +390,8 @@ An interesting evolution of the second experiment is the implementation of pruni
 
 
 \section{Conclusions}
-The experiments carried out with the \textit{Transfer Learning} procedure have given excellent results. The technique is certainly a useful and valid approach to build excellent models quickly and with low computational capacity, even if the risk of overfitting is always present and one must pay close attention to the adaptability with one's own dataset, one's own domain and its own classes, based on the chosen model.
-
+This work proved that images similar to each other belonging to a large number of classes was possible even with a small dataset; this result was achieved thanks to \textit{Transfer Learning} and \textit{Data Augmentation} techniques, that allowed the models to preserve, fine-tune concepts learned on other datasets and made the network not overfitting due to data scarcity. \par
+Even shallow model could reach high accuracy on a dataset six time larger than the one used for training and more complex ones could almost reach $95\%$ in accuracy. The use of automatic procedures, like the cyclical learning rate, speeded up the search for an optimal solution in the space of hyper-parameters, but the human intervention was still needed when it came to make high level choices.
 
 
 \bibliographystyle{IEEEtran}
