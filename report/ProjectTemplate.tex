@@ -384,13 +384,12 @@ and thus the accuracy started to drop. This behaviour is shown in Figure \ref{fi
 
 
 In order to improve the experiments the segmented images could be used as well, but in a parallel gated input so that the network could learn that the images without background contain just additional information about the original image and that they are not part of the original training dataset. In this way the model could reinforce the concepts learned but it could be less flexible if the secondary input layer is not designed carefully. \par
-An interesting future development of the second experiment is the implementation of pruning strategies: in this way it would be possible to find an optimal network that can be deployed in smaller devices.
+An interesting evolution of the second experiment is the implementation of pruning strategies: in this way it would be possible to find an optimal network that can be deployed in smaller devices and have advantages in terms of time of inferece.
 
 
 
 \section{Conclusions}
-Conclusions should summarize the central points made in the Discussion section, reinforcing for the reader the value and implications of the work. If the results were not definitive, specific future work that may be needed can be (briefly) described. The conclusions should never contain ``surprises''. Therefore, any conclusions should be based on observations and data already discussed. It is considered extremely bad form to introduce new data in the conclusions.
-
+The experiments carried out with the \textit{Transfer Learning} procedure have given excellent results. The technique is certainly a useful and valid approach to build excellent models quickly and with low computational capacity, even if the risk of overfitting is always present and one must pay close attention to the adaptability with one's own dataset, one's own domain and its own classes, based on the chosen model.
 
 
 
