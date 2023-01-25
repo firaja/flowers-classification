@@ -167,18 +167,18 @@ Another peculiarity of the dataset is the presence of similar images belonging t
 
 \section{The Methodological Approach}
 
-In order to classify images correctly two types of experiment were taken in accont: the first one aimed to find the best CNN\footnote{Convolutional Neural Network} architectures in 
-literature that could fit the available hardware (see Section \ref{sec:tech}) and the second tried to find a good trade-off between number of trainable layers and accuracy by freezing the layers' weights during training. \par
-All the proposed architecture were pre-trained on \textit{ImageNet}\cite{5206848} and used as feature extractors for a new classifier that operates over 102 classes.
+In order to classify images correctly two types of experiment were taken in account: the first one aimed to find the best CNN\footnote{Convolutional Neural Network} architectures in 
+literature that could fit the available hardware (see Section \ref{sec:tech}) and fine-tuned to accomplish the task; the second one tried to find a good trade-off between number of trainable layers, training time and accuracy by freezing the layers' weights during training. \par
+All the proposed architecture were pre-trained on \textit{ImageNet}\cite{5206848} and used as feature extractors for a new classifier that operates over 102 classes (see Section \ref{sec:exp1} for details about the architecture).
 
 \subsection{Technology and implementation}\label{sec:tech}
 The hardware used for this work was composed by a GPU NVIDIA 2070 SUPER with 8GB of VRAM, a CPU Intel i7-9700K $3.6$GHz and $32$GB of RAM. \par
-The libraries used were \textit{Keras}, based on \textit{Tensorflow}, for learning and preprocessing, \textit{sklearn} for metrics and \textit{numpy}  for generic calculation.
-\todo{Github}
+The libraries used were \textit{Keras}, based on \textit{Tensorflow}, for learning and preprocessing, \textit{sklearn} for metrics and \textit{numpy}  for generic calculations.
 
-\subsection{Preprocessing and Data Augmentation}
+
+\subsection{Data Augmentation and Preprocessing}
 Before proceeding with the description of the experiments, there was a preliminar implicit objective: how to overcome the scarcity of training data.\par
-In order to raise the number of samples it was used \texttt{ImageDataGenerator} from \textit{Keras}. This allowed to virtually loop infinitely on the images during the training and most importantly to transform each of these images by applying none, one or more of the following transformations:
+In order to raise the number of samples it was used \texttt{ImageDataGenerator}\footnote{Although it is deprecated, the API is easy to use and already optimized. The suggested way with \texttt{tf.keras.utils.image\_dataset\_from\_directory} and \texttt{tf.data.Dataset} is more flexible, but harder to optimize properly. \texttt{ImageDataGenerator} API was preferable in terms of development speed.} from \textit{Keras}. This allowed to virtually loop infinitely on the images during the training and most importantly to transform each of these images by applying none, one or more of the following transformations:
 \begin{itemize}
 \item{Horizontal flipping}
 \item{Rotation of angle $\alpha \in [-20^{\circ}, 20^{\circ}]$}
@@ -189,7 +189,7 @@ Additionally every image is transformed with the original preprocessing function
 
 
 \subsection{Hyper-parameters}
-To train the perceptron on the extracted features it was decided to use the SGD \cite{kiefer1952} with momentum $\beta = 0.9$ or Adam \cite{kingma2014adam} with $\beta_1 = 0.9$ and $\beta_2 = 0.999$, with dimension of
+To train the classifier on the extracted features it was decided to use the SGD \cite{kiefer1952} with momentum $\beta = 0.9$ or Adam \cite{kingma2014adam} with $\beta_1 = 0.9$ and $\beta_2 = 0.999$, with dimension of
 batch equal to $64$.
 Since the task is a classification over multiple categories the chosen objective function to minimize was \emph{categorical cross-entropy}. \par
 
@@ -201,7 +201,7 @@ from local minima that could block its correct covergence.\par
 
 To calculate the aforementioned interval $I$ of values the authors described the \textit{Learning Rate Finder} algorithm (LRF):
 \begin{enumerate}
-\item{Choose an interval $J$ on which to make vary $\eta$. For this work $I = [10^{-10}, 10^{-1}]$ was used} 
+\item{Choose an interval $J$ on which to make vary $\eta$. For this work $J = [10^{-10}, 10^{-1}]$ was used} 
 \item{Train the model for few epochs (\textit{e.g.} 10) starting with the smallest ${\eta}' \in J$. At the end of each epoch exponentially increase ${\eta}'$}
 \item{Stop the training when ${\eta}'$ reached the upper bound of $J$}
 \item{Plot the fluctuation of the loss function realtive to ${\eta}'$}
@@ -215,7 +215,7 @@ As an example, the algorithm generated the plot in Figure \ref{fig:lr} for optim
 \end{figure}
 
 The graph shows how the network begins to learn starting from $\eta \simeq 10^{-5}$ and diverges once $\eta$ exceeded $\sim10^{-3}$; these two values were used as extremes of $I$ for the cyclical learning rate algorithm on this particular architecture.\par
-The drawback of this strategy is that it added two additional hyper-parameters: the step size $s$, that determined the number of iterations required to go from the minimum $\eta$ to the maximum, and the cyclical learning rate schedule, that defined the way $\eta$ is modified. \par
+The drawback of this strategy is that it added two additional hyper-parameters: the step size $s$, that determined the number of iterations required to go from the minimum $\eta \in I$ to the maximum, and the cyclical learning rate schedule, that defined the way $\eta$ is modified. \par
 
 Figure \ref{fig:triangular} shows the two schedules used for this work: \emph{Triangular} and \emph{Triangular2};
 the difference between the two is that the second method halves the upper bound of $I$ at each cycle completion.
@@ -236,13 +236,17 @@ the difference between the two is that the second method halves the upper bound 
 \subsection{Experiment 1: Choice of the architecture}\label{sec:exp1}
 The first experiment aimed to find the architecture that could achieve the best accuracy on the test set. This work tested \textit{ResNet18} \cite{he2015deep}, \textit{InceptionV3} \cite{szegedy2015going} and 
 \textit{EfficientNetB4} \cite{tan2019efficientnet}. All of them presented diffent peculiarities and could be used for training with the available hardware. \par
-Since the training on \textit{ImageNet} of the networks is not sufficient to use them as feature extractors, these networks were fine-tuned in order to update their weights and to fit better the task.
+Since the training on \textit{ImageNet} of the networks is not sufficient to use them as feature extractors, these networks were fine-tuned in order to update their weights and to fit better the task.\par
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=1\textwidth]{images/architecture.png} 
-\caption{Plot of the learning rate with \emph{Triangular} and \emph{Triangular2} methods}
+\caption{High level architecture of the network: in grey the pretrained network used as feature extractor, followed by the classifier's layers.}
 \label{fig:architecture}
 \end{figure}
+
+
+
+
 For each networks the original classification layers were removed and substituted with a new classifier composed by the following layers:
 \begin{enumerate}
 \item{\textbf{Global Average Pooling}: instead of using a Flatten layer that could raise the risk of overfitting and forced the use of Dropout, this layer applied average pooling on the spatial dimensions until each spatial dimension is one, and leaves other dimensions unchanged. It added 0 new parameters to the model} 
@@ -250,9 +254,9 @@ For each networks the original classification layers were removed and substitute
 \item{\textbf{Dropout} as regularization technique for reducing overfitting during training, with a drop rate $\rho=0.5$. It added 0 new parameters to the model}
 \item{\textbf{Dense 102}: a dense layer that used softmax as activation function. It added  $102 \cdot (512+1) = 52326$ new parameters}
 \end{enumerate}
-
+Figure \ref{fig:architecture} gives an overview of the architecture described above.
 The total number of parameters added to the original feature extractor is $512n + 54886$, where $n$ is the dimensionality of the last layer of the feature extractor.\par
-The strategy adopted for training is the same for all the three networks: each network is trained with 3 different step sizes, two different optimizers and 2 different learning rate schedulers. So each network is trained 12 times in order to find the best configuration. For this phase it was implemented the \textit{Early Stopping} technique in order to prevent overfitting and to speed up the training by stopping prematurely the process. This strategy monitored the validation accuracy and stopped everytime a model could not improve by $1\%$ in the last $10$ epochs.
+The strategy adopted for training is the same for all the three networks: each network is trained with 3 different step sizes $s \in \{2,4,8\}$, two different optimizers (\textit{SGD} and \textit{Adam}) and 2 different learning rate schedulers (\emph{Triangular} and \emph{Triangular2}). So each network is trained 12 times in order to find the best configuration. For this phase it was implemented the \textit{Early Stopping} technique in order to prevent overfitting and to speed up the training by stopping prematurely the process. This strategy monitored the validation accuracy and stopped everytime a model could not improve by $0.5\%$ in the last $10$ epochs.
 
 
 
@@ -273,8 +277,8 @@ From the output of the \textit{LRF} algorithm the learning rate was varied in th
 EfficientNetB4 is a convolutional neural network that is 237 layers deep and accepts images of input size of $224 \times 224$. 
 This type of architecture was built using automatic search and scaling techniques
 aimed to simultaneously maximize the accuracy of the network and the number of operations per second. \par
-There was no need to apply the ad-hoc preprocessing function because it was embedded in the Keras implementation. \par
-From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-5}, 10^{-3}]$ fboth or SGD and Adam.
+There was no need to apply the ad-hoc preprocessing function because it was embedded in the \textit{Keras} implementation. \par
+From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-5}, 10^{-3}]$ fboth or \textit{SGD} and \textit{Adam}.
 
 
 \subsection{Evaluation of the training}
@@ -292,7 +296,7 @@ that shows the main component identified by the network.
 \label{fig:grad_multi}
 \end{figure}
 
-Figure \ref{fig:grad_multi} demonstrates that the model could distinguish the flowers from the background and that the background is not an important 
+For example Figure \ref{fig:grad_multi} demonstrates that the model could distinguish multiple flowers from the background and that the background is not an important 
 feature to be learned.
 
 
@@ -347,6 +351,8 @@ EfficientNetB4 & 16 & Adam & $[10^{-5}, 10^{-3}]$ & Triangualr2 & 4 & 94.89\% \\
 \end{tabular}%
 }
 \end{table}
+
+Appendix \ref{sec:app} shows in tabular form all the results from the 12 trainings of each model.
 
 \begin{figure}[ht!]
 \centering
@@ -405,7 +411,7 @@ Even shallow model could reach high accuracy on a dataset six time larger than t
 
 \newpage
 \appendix
-\section{Exerimental results}
+\section{Exerimental results}\label{sec:app}
 
 
 \begin{table}[ht!]
