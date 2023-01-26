@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+
+"""learningratefinder.py: Learning rate finder algorithm."""
+__author__      = "David Bertoldi"
+__email__       = "d.bertoldi@campus.unimib.it"
+
+
 import os
 import argparse
 import models

@@ -167,9 +167,10 @@ Another peculiarity of the dataset is the presence of similar images belonging t
 
 \section{The Methodological Approach}
 
-In order to classify images correctly two types of experiment were taken in account: the first one aimed to find the best CNN\footnote{Convolutional Neural Network} architectures in 
-literature that could fit the available hardware (see Section \ref{sec:tech}) and fine-tuned to accomplish the task; the second one tried to find a good trade-off between number of trainable layers, training time and accuracy by freezing the layers' weights during training. \par
-All the proposed architecture were pre-trained on \textit{ImageNet}\cite{5206848} and used as feature extractors for a new classifier that operates over 102 classes (see Section \ref{sec:exp1} for details about the architecture).
+Two experiments are proposed in this work: the first one aimed to find the best CNN\footnote{Convolutional Neural Network} architectures in 
+literature that could fit the available hardware (see Section \ref{sec:tech}) and fine-tuned it in order to classify images correctly; the objective of the second one was to find a good trade-off between number of trainable layers, training time and accuracy by freezing the layers' weights during training so that the training on new classes could be faster. \par
+
+All the proposed architectures were pre-trained on \textit{ImageNet}\cite{5206848} and used as feature extractors for a new classifier that operates over 102 classes (see Section \ref{sec:exp1} for details about the architecture).
 
 \subsection{Technology and implementation}\label{sec:tech}
 The hardware used for this work was composed by a GPU NVIDIA 2070 SUPER with 8GB of VRAM, a CPU Intel i7-9700K $3.6$GHz and $32$GB of RAM. \par
@@ -177,7 +178,7 @@ The libraries used were \textit{Keras}, based on \textit{Tensorflow}, for learni
 
 
 \subsection{Data Augmentation and Preprocessing}
-Before proceeding with the description of the experiments, there was a preliminar implicit objective: how to overcome the scarcity of training data.\par
+Before proceeding with the description of the experiments, there was a preliminar implicit objective: a way to overcome the scarcity of training data.\par
 In order to raise the number of samples it was used \texttt{ImageDataGenerator}\footnote{Although it is deprecated, the API is easy to use and already optimized. The suggested way with \texttt{tf.keras.utils.image\_dataset\_from\_directory} and \texttt{tf.data.Dataset} is more flexible, but harder to optimize properly. \texttt{ImageDataGenerator} API was preferable in terms of development speed.} from \textit{Keras}. This allowed to virtually loop infinitely on the images during the training and most importantly to transform each of these images by applying none, one or more of the following transformations:
 \begin{itemize}
 \item{Horizontal flipping}
@@ -263,7 +264,7 @@ The strategy adopted for training is the same for all the three networks: each n
 \subsubsection{Fine-tuning of ResNet-18}\label{sec:resnet18}
 ResNet-18 is a convolutional neural network that is 18 layers deep and accepts images of input size of $224 \times 224$. It is a residual network, that is it implements skip connections to help to address the problem of vanishing  gradients. \par
 The preprocessing function applied on the images converted them from RGB to BGR, then each color channel was zero-centered with respect to the \textit{ImageNet} dataset, without scaling. \par
-From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-5}, 10^{-3}]$ for SGD and $[10^{-6}, 10^{-4}]$ for Adam.
+From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-6}, 10^{-4}]$ for SGD and $[10^{-5}, 10^{-3}]$ for Adam.
 
 
 \subsubsection{Fine-tuning of InceptionV3}\label{sec:inceptionv3}
@@ -321,8 +322,11 @@ of the quality of the model.
 
 
 \subsection{Experiment 2: Freeze layers}\label{sec:exp2}
-The aim of this second experiment was to find a good trade-off between the number of trainable parameters, test accuracy and training time: after choosing the best model from Section \ref{sec:exp1}, its layers were frozen so that the weight would not be updated during training. The layers were frozen starting from the input to the deeper layers and because the training dataset is small and different from \textit{ImageNet} dataset it was expected to have better performances when only a small portion of layers is locked. Only the feature extractor was affected by this process, while the classificator reamined fully trainable. This allowed to freeze from $10\%$ to $100\%$ of the feature extractor's layers.\par
-The results were evaluated considering, in order of importance,  the accuracy on the test dataset, the training time and the number of trainable parameters. These three parameters were chosen because the first two could be strictly related, but the third and the other two could present some interesting relation \textit{e.g.} the training time could be stable before dropping along with the accuracy.
+The aim of this second experiment was to find an architecture derived from the first experiment that could be trained again or trained with new classes\footnote{Not provided by the original dataset.} with better timings but preserving accuracy as much as possible.
+This means that the objective was to find a good trade-off between the number of trainable parameters, test accuracy and training time: after choosing the best model from Section \ref{sec:exp1}, its layers were frozen so that the weight would not be updated during training. The layers were frozen starting from the input to the deeper layers and because the training dataset is small and different from \textit{ImageNet} dataset it was expected to have better performances when only a small portion of layers is locked. Only the feature extractor was affected by this process, while the classificator reamined fully trainable. This allowed to freeze from $10\%$ to $100\%$ of the feature extractor's layers.\par
+In order to have an accurate estimation of the timings the \textit{Early Stopping} strategy was disabled because it could terminate prematurely the training process. This limitation afflicted the accuracy because the model could have overfitted more than the regularized version.
+\par
+The results were evaluated considering, in order of importance,  the accuracy on the test dataset, the training time and the number of trainable parameters. 
 
 
 
@@ -364,10 +368,7 @@ Appendix \ref{sec:app} shows in tabular form all the results from the 12 trainin
 \subsection{Experiment 2}\label{sec:exp2}
 
 
-It is immediately noticeable that EfficientNetB4 from the first experiment performed better than the other models and for this reason it was chosen for the second experiment. Figure \ref{fig:time_acc}a compares the accuracy on the test dataset and the number of trainable parameters as the number of frozen layers increased. Figure \ref{fig:time_acc}b compares accuracy and training time with respect to the number of frozen layers. \par 
-In order to have an accurate estimation of the timings the \textit{Early Stopping} strategy was disabled because it could terminate prematurely the training process. This limitation afflicted the accuracy because the model could have overfitted more than the regularized version.
-
-
+It is immediately noticeable that EfficientNetB4 from the first experiment performed better than the other models and for this reason it was chosen for the second experiment. Figure \ref{fig:time_acc}a compares the accuracy on the test dataset and the number of trainable parameters as the number of frozen layers increased. Figure \ref{fig:time_acc}b compares accuracy and training time with respect to the number of frozen layers. 
 
 
 \begin{figure}

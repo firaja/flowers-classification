@@ -1,4 +1,10 @@
-# import the necessary packages
+#!/usr/bin/env python
+
+"""learningratefinder.py: Learning rate finder algorithm."""
+__author__      = "David Bertoldi"
+__email__       = "d.bertoldi@campus.unimib.it"
+
+
 from tensorflow.keras.callbacks import LambdaCallback
 from tensorflow.keras import backend as K
 import matplotlib.pyplot as plt

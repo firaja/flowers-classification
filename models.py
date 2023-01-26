@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+
+"""models.py: File containing data models."""
+__author__      = "David Bertoldi"
+__email__       = "d.bertoldi@campus.unimib.it"
+
+
 import math
 import tensorflow as tf
 import tensorflow.keras
@@ -20,8 +27,10 @@ WEIGHTS='imagenet'
 ACTIVATION = 'relu'
 FINAL_ACTIVATION = 'softmax'
 
+# Dict str:obj with all the architectures
 ARCHITECTURES = {}
 
+#Dic str:dict with all the optimizers
 OPTIMIZERS = {
     'Adam': {
         'get': lambda : lambda : Adam(learning_rate=1e-6),
@@ -33,13 +42,16 @@ OPTIMIZERS = {
         }
     }
 
+
 def last_conv(model):
+    """Finds the last convolutional layer of a Keras model"""
     return list(filter(lambda x: isinstance(x, Conv2D), model.layers))[-1].name
     
 
 
 
 class Efficientnetb4:
+    """Class representing EfficientNetB4"""
 
     size = 224
 
@@ -69,6 +81,7 @@ class Efficientnetb4:
 
 
 class FrozenEfficientnetb4:
+    """Class representing EfficientNetB4 with a custom percentage of layers frozen"""
 
     size = 224
 
@@ -104,6 +117,7 @@ class FrozenEfficientnetb4:
     
 
 class Resnet18:
+    """Class representing ResNet-18"""
 
     size = 224
 
@@ -132,6 +146,7 @@ class Resnet18:
 
 
 class Inceptionv3:
+    """Class representing InceptionV3"""
 
     size = 299
 
@@ -161,10 +176,7 @@ class Inceptionv3:
 
 
 
-
-
-
-# Populate architectures
+# Populate automatically ARCHITECTURES
 current_module = sys.modules[__name__]
 for name, obj in inspect.getmembers(sys.modules[__name__], lambda member: inspect.isclass(member) and member.__module__ == __name__):
     ARCHITECTURES[name.lower()] = obj
