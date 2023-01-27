@@ -113,9 +113,9 @@ to obtain high performances even when the model is partially trained.
 
 
 The aim of this work is to build a machine learning model able to learn from a small knowledge base and to classify similar images belonging to many classes.
-The main issue to overcome was the high chance that the model could over-fit and fail to classify unseen samples. 
+The main issue to overcome was the high chance that the model could overfit and fail to classify unseen samples. 
 The strategy adopted was to find the model exploiting transfer learning the best and then trying to freeze the model such that it could maintain similar performances but with lower training time. \par
-This document describes the research on trained models, hyper-parameters and generalization techniques that allowed the model to operate on a larger variety of images. 
+This document describes the research on trained models, hyperparameters and generalization techniques that allowed the model to operate on a larger variety of images. 
 
 
 
@@ -133,7 +133,7 @@ The subdivision of the dataset defined in the original publication has been main
 \label{fig_dataset}
 \end{figure}
 
-Each category is represented by $10$ images in the training set and validation set, while the proportion of images for each category varies in the test set. Figure \ref{fig:dist} plots the distribution of the three datasets: the distribution of the samples is non-uniform across the categories, with a mean $\mu \simeq 60$ and standard deviation $\sigma \simeq 44$. In fact some classes had more than 200 samples, like  $50$ (\textit{Common Dandelion}) and $78$ (\textit{Lotus}) and other just $20$ per class, like $1$ (\textit{Pink Primrose}), $17$ (\textit{Purple Cornflower}) or $23$ (\textit{Fritillary}).
+Each category is represented by $10$ images in the training set and validation set, while the proportion of images for each category varies in the test set. Figure \ref{fig:dist} plots the distribution of the three datasets: the distribution of the samples is non-uniform across the categories, with a mean $\mu \simeq 60$ and standard deviation $\sigma \simeq 44$. In fact some classes had more than 200 samples, like  $50$ (\textit{Common Dandelion}) and $78$ (\textit{Lotus}) and other just $20$ per class, like $1$ (\textit{Pink Primrose}), $17$ (\textit{Purple Coneflower}) or $23$ (\textit{Fritillary}).
 
 \begin{figure}[ht!]
 \centering
@@ -174,11 +174,11 @@ All the proposed architectures were pre-trained on \textit{ImageNet}\cite{520684
 
 \subsection{Technology and implementation}\label{sec:tech}
 The hardware used for this work was composed by a GPU NVIDIA 2070 SUPER with 8GB of VRAM, a CPU Intel i7-9700K $3.6$GHz and $32$GB of RAM. \par
-The libraries used were \textit{Keras}, based on \textit{Tensorflow}, for learning and preprocessing, \textit{sklearn} for metrics and \textit{numpy}  for scientific calculus.
+The libraries used were \textit{Keras}, based on \textit{Tensorflow}, for learning and preprocessing, \textit{sklearn} for metrics and \textit{numpy}  for scientific calcolous.
 
 
 \subsection{Data Augmentation and Preprocessing}
-Before proceeding with the description of the experiments, there was a preliminary implicit objective: a way to overcome the scarcity of training data.\par
+Before proceeding with the description of the experiments, there was a preliminar implicit objective: a way to overcome the scarcity of training data.\par
 In order to raise the number of samples it was used \texttt{ImageDataGenerator}\footnote{Although it is deprecated, the API is easy to use and already optimized. The suggested way with \texttt{tf.keras.utils.image\_dataset\_from\_directory} and \texttt{tf.data.Dataset} is more flexible, but harder to optimize properly. \texttt{ImageDataGenerator} API was preferable in terms of development speed.} from \textit{Keras}. This allowed to virtually loop infinitely on the images during the training and most importantly to transform each image by applying none, one or more of the following transformations:
 \begin{itemize}
 \item{Horizontal flipping}
@@ -198,14 +198,14 @@ The learning rate $\eta$ is calculated according to the algorithm described in \
 Networks”} \cite{smith2015cyclical}. This algorithm made $\eta$ fluctuate forward and
 back in a fixed interval $I$ at each iteration during the training phase;
 this strategy had a dual purpose: to reduce the bias introduced by choosing a non-optimal $\eta$ during the design phase and to help the optimizer to escape from saddle points or 
-from local minima that could block its correct convergence.\par
+from local minima that could block its correct covergence.\par
 
 To calculate the aforementioned interval $I$ of values the authors described the \textit{Learning Rate Finder} algorithm (LRF):
 \begin{enumerate}
 \item{Choose an interval $J$ on which to make vary $\eta$. For this work $J = [10^{-10}, 10^{-1}]$ was used} 
 \item{Train the model for few epochs (\textit{e.g.} 10) starting with the smallest ${\eta}' \in J$. At the end of each epoch exponentially increase ${\eta}'$}
 \item{Stop the training when ${\eta}'$ reached the upper bound of $J$}
-\item{Plot the fluctuation of the loss function relative to ${\eta}'$}
+\item{Plot the fluctuation of the loss function realtive to ${\eta}'$}
 \end{enumerate}
 \begin{figure}[ht]
 \centering
@@ -213,7 +213,7 @@ To calculate the aforementioned interval $I$ of values the authors described the
 \caption{Output of the learning rate finder algorithm. $I=[10^{-5}, 10^{-3}]$ is the optimal solution}
 \label{fig:lr}
 \end{figure}
-Figure \ref{fig:lr} is an example of the output of the algorithm, us gin \textit{Adam} and the architecture described in section \ref{sec:resnet18}: the graph shows how the network began to learn starting from $\eta \simeq 10^{-5}$ and diverged once $\eta$ exceeded $\sim10^{-3}$; these two values were used as extremes of $I$ for the cyclical learning rate algorithm on this particular architecture.\par
+Figure \ref{fig:lr} is an example of the output of the algorithm, usgin \textit{Adam} and the architecture described in section \ref{sec:resnet18}: the graph shows how the network began to learn starting from $\eta \simeq 10^{-5}$ and diverged once $\eta$ exceeded $\sim10^{-3}$; these two values were used as extremes of $I$ for the cyclical learning rate algorithm on this particular architecture.\par
 The drawback of this strategy is that it added two additional hyper-parameters: the step size $s$, that determined the number of iterations required to go from the minimum $\eta \in I$ to the maximum, and the cyclical learning rate schedule, that defined the way $\eta$ is modified. \par
 
 Figure \ref{fig:triangular} shows the two schedules used for this work: \emph{Triangular} and \emph{Triangular2};
@@ -234,12 +234,12 @@ the difference between the two is that the second method halves the upper bound 
 
 \subsection{Experiment 1: Choice of the architecture}\label{sec:exp1}
 The first experiment aimed to find the architecture that could achieve the best accuracy on the test set. This work tested \textit{ResNet-18} \cite{he2015deep}, \textit{InceptionV3} \cite{szegedy2015going} and 
-\textit{EfficientNetB4} \cite{tan2019efficientnet}. All of them presented different peculiarities and could be used for training with the available hardware. \par
+\textit{EfficientNetB4} \cite{tan2019efficientnet}. All of them presented diffent peculiarities and could be used for training with the available hardware. \par
 Since the training on \textit{ImageNet} of the networks is not sufficient to use them as feature extractors, these networks were fine-tuned in order to update their weights and to fit better the task.\par
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=1\textwidth]{images/architecture.png} 
-\caption{High level architecture of the network: in gray the pretrained network used as feature extractor, followed by the classifier's layers.}
+\caption{High level architecture of the network: in grey the pretrained network used as feature extractor, followed by the classifier's layers.}
 \label{fig:architecture}
 \end{figure}
 
@@ -255,7 +255,7 @@ For each networks the original classification layers were removed and substitute
 \end{enumerate}
 Figure \ref{fig:architecture} gives an overview of the architecture described above.
 The total number of parameters added to the original feature extractor is $512n + 54886$, where $n$ is the dimensionality of the last layer of the feature extractor.\par
-The strategy adopted for training is the same for all the three networks: each network is trained with 3 different step sizes $s \in \{2,4,8\}$, two different optimizers (\textit{SGD} and \textit{Adam}) and 2 different learning rate schedulers (\emph{Triangular} and \emph{Triangular2}). So each network is trained 12 times in order to find the best configuration. For this phase it was implemented the \textit{Early Stopping} technique in order to prevent overfitting and to speed up the training by stopping prematurely the process when the model diverged or converged too slowly. This strategy monitored the validation accuracy and stopped every time a model could not improve by $0.5\%$ in the last $10$ epochs.
+The strategy adopted for training is the same for all the three networks: each network is trained with 3 different step sizes $s \in \{2,4,8\}$, two different optimizers (\textit{SGD} and \textit{Adam}) and 2 different learning rate schedulers (\emph{Triangular} and \emph{Triangular2}). So each network is trained 12 times in order to find the best configuration. For this phase it was implemented the \textit{Early Stopping} technique in order to prevent overfitting and to speed up the training by stopping prematurely the process when the model diverged or converged too slowly. This strategy monitored the validation accuracy and stopped everytime a model could not improve by $0.5\%$ in the last $10$ epochs.
 
 
 
@@ -266,7 +266,7 @@ From the output of the \textit{LRF} algorithm the learning rate was varied in th
 
 
 \subsubsection{Fine-tuning of InceptionV3}\label{sec:inceptionv3}
-InceptionV3 is a convolutional neural network that is 42 layers deep and accepts images of input size of $299 \times 299$ px. This architecture factorizes the larger convolutions  into smaller ones and uses an auxiliary classifier to propagate label information lower down the network.
+InceptionV3 is a convolutional neural network that is 42 layers deep and accepts images of input size of $299 \times 299$ px. This architecture factorizes the larger convolutions  into smaller ones and uses an auxiliary classifer to propagate label information lower down the network.
  \par
 The preprocessing function applied on the images scaled their pixels between -1 and 1, sample-wise. \par
 From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-5}, 10^{-2}]$ for \textit{SGD} and $[10^{-4}, 10^{-2}]$ for \textit{Adam}.
@@ -277,15 +277,15 @@ EfficientNetB4 is a convolutional neural network that is 237 layers deep and acc
 This type of architecture was built using automatic search and scaling techniques
 aimed to simultaneously maximize the accuracy of the network and the number of operations per second. \par
 There was no need to apply the ad-hoc preprocessing function because it was embedded in the \textit{Keras} implementation of the network. \par
-From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-5}, 10^{-3}]$ both or \textit{SGD} and \textit{Adam}.
+From the output of the \textit{LRF} algorithm the learning rate was varied in the interval $[10^{-5}, 10^{-3}]$ fboth or \textit{SGD} and \textit{Adam}.
 
 
 \subsection{Evaluation of the training}
-To verify the quality of the training two techniques were applied: \textit{grad-CAM} \cite{Selvaraju_2019}  and \textit{Saliency Map} \cite{simonyan2013deep}. Confusion matrices \cite{Stehman1997} as well helped identifying
+To verify the quality of the training two techniques were applied: \textit{grad-CAM} \cite{Selvaraju_2019}  and \textit{Saliency Map} \cite{simonyan2013deep}. Confusion matrices \cite{Stehman1997} as well helped indentifying
 issues in the first stages of the implementation.
 
 \subsubsection{grad-CAM}
-\textit{grad-CAM} uses the gradient of the last convolutional layer so that the spatial information are preserved. An heat-map is displayed over the original image
+\textit{grad-CAM} uses the gradient of the last convolutional layer so that the spatial information are preserved. An heatmap is displayed over the original image
 that highlighted the main component identified by the network.
 
 \begin{figure}[ht!]
@@ -321,8 +321,8 @@ of the quality of the model.
 
 \subsection{Experiment 2: Freezing of the layers}\label{sec:exp2}
 The aim of this second experiment was to find an architecture derived from the first experiment that could be trained again or trained with new classes\footnote{Not provided by the original dataset.} with better timings but preserving accuracy as much as possible.
-This means that the objective was to find a good trade-off between the number of trainable parameters, test accuracy and training time: after choosing the best model from Section \ref{sec:exp1}, its layers were frozen so that the weight would not be updated during training. The layers were frozen progressively starting from the input to the deeper layers and because the training dataset is small and different from \textit{ImageNet} dataset it was expected to have better performances when only a small portion of layers was locked. Only the feature extractor was affected by this process, while the classifier remained fully trainable. \par
-In order to have an accurate estimation of the timings the \textit{Early Stopping} strategy was disabled because it could terminate prematurely the training process. This limitation afflicted the accuracy because the model could have over-fitted more than the regularized version.
+This means that the objective was to find a good trade-off between the number of trainable parameters, test accuracy and training time: after choosing the best model from Section \ref{sec:exp1}, its layers were frozen so that the weight would not be updated during training. The layers were frozen progressively starting from the input to the deeper layers and because the training dataset is small and different from \textit{ImageNet} dataset it was expected to have better performances when only a small portion of layers was locked. Only the feature extractor was affected by this process, while the classificator reamined fully trainable. \par
+In order to have an accurate estimation of the timings the \textit{Early Stopping} strategy was disabled because it could terminate prematurely the training process. This limitation afflicted the accuracy because the model could have overfitted more than the regularized version.
 \par
 The results were evaluated considering, in order of importance,  the accuracy on the test dataset, the training time and the number of trainable parameters. 
 
@@ -346,10 +346,10 @@ Table \ref{tab:res} shows the configuration that gave the best results for
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{|l|l|l|l|l|l|l|}
 \hline
-\textbf{Architecture} & \textbf{Batch size} & \textbf{Optimizer} & \textbf{Learning rate} & \textbf{Scheduler} & \textbf{Step size} & \textbf{Test accuracy} \\ \hline
+\textbf{Archtecture} & \textbf{Batch size} & \textbf{Optimizer} & \textbf{Learning rate} & \textbf{Scheduler} & \textbf{Step size} & \textbf{Test accuracy} \\ \hline
 ResNet-18      & 64 & Adam & $[10^{-5}, 10^{-3}]$ & Triangular  & 2 & 87.64\% \\ \hline
 InceptionV3    & 64 & Adam & $[10^{-4}, 10^{-2}]$ & Triangular  & 2 & 91.96\% \\ \hline
-EfficientNetB4 & 16 & Adam & $[10^{-5}, 10^{-3}]$ & Triangular2 & 4 & 94.89\% \\ \hline
+EfficientNetB4 & 16 & Adam & $[10^{-5}, 10^{-3}]$ & Triangualr2 & 4 & 94.89\% \\ \hline
 \end{tabular}%
 }
 \end{table}
@@ -379,7 +379,7 @@ It is immediately noticeable that \textit{EfficientNetB4} from the first experim
 
 \begin{table}[ht!]
 \centering
-\caption{\textit{EfficientNetB4}: Comparison between accuracy, trainable parameters and training time as the number of frozen layers increased }
+\caption{\textit{EfficientNetB4}: Comparisong between accuracy, trainable parameters and training time as the number of frozen layers increased }
 \label{tab:frozen}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{|l|l|l|l|}
@@ -404,22 +404,22 @@ It is immediately noticeable that \textit{EfficientNetB4} from the first experim
 
 \section{Discussion}
 Despite the shallowness of \textit{ResNet-18}, the model based on it performed with quite high accuracy ($\sim 88\%$) but it was predictably surpassed by the other two models. In particular \textit{EfficientNetB4}, that performed better on \textit{ImageNet} \cite{tan2019efficientnet}, was more efficient than \textit{InceptionV3} in terms of accuracy and number of parameters. The main obstacle represented by a small dataset was overcome by data augmentation: all the models performed with an average of $+4\%$ in accuracy thanks to this technique. The \textit{Transfer Learning} also played a fundamental role and  without it the model would had been less stable and the training would had required more time before reaching the same qualitative results.\par
-Figure \ref{fig:cm} shows that the model had more problems dealing with class 50 (\textit{Common Dandelion}) in the test dataset; this was the class with more samples and some images contained insects landed on the flower and in others the background covered more than half of the image. A strength point of the model is that is able to recognize obstacles and foreign objects like in Figure \ref{fig:sal}, where the \textit{Saliency Map} shows that the gradient were smaller along the branch.
+Figure \ref{fig:cm} shows that the model had more problems dealing with class 50 (\textit{Common Dandelion}) in the test dataset; this was the class with more samples and some images contained insects landed on the flower and in others the background covered more than half of the image. A strenght point of the model is that is able to recognize obstacles and foreign objects like in Figure \ref{fig:sal}, where the \textit{Saliency Map} shows that the gradient were smaller along the branch.
 \par
-Tables \ref{tab:resnet}, \ref{tab:inception} and \ref{tab:efficient} demonstrates how \textit{SGD} and in particular \textit{SGD} with \textit{Triangular2} performed worse than \textit{Adam}; this because \textit{Adam} was better in escaping saddle points thanks to its adaptive estimation of the momentum, although SGD is considered having better generalization performance \cite{Ashia}.\par
-In the second phase models with less frozen layers performed better as expected: the shallow layers contained generic knowledge learned from \textit{ImageNet}, like lines, basic shapes, \textit{etc.} and they were useful for this new task. As the number of frozen layers increased more complex concepts remained stored in the network and they were less useful to the classifier
-and thus the accuracy started to drop. This behavior is shown in Figure \ref{fig:time_acc}. The reason why on $20\%$ the accuracy dropped and then raised again it could be related to the fact that a block of layers was partially frozen and then less consistent during the training \textit{i.e.} the entire block could be capable of learning a feature, but its knowledge came from the training on two different datasets.
+Tables \ref{tab:resnet}, \ref{tab:inception} and \ref{tab:efficient} demonstrates how \textit{SGD} and in particular \textit{SGD} with \textit{Triangular2} performed worse than \textit{Adam}; this because \textit{Adam} was better in escaping saddle points thanks to its adaptive estimation of the momentum, although SGD is considered having better generalization perfomance \cite{Ashia}.\par
+In the second phase models with less frozen layers performed better as expected: the shallow layers contained generic knowledge learned from \textit{ImageNet}, like lines, basic shapes, \textit{etc.} and they were useful for this new task. As the number of frozen layers increased more complex concepts reamained stored in the network and they were less useful to the classifier
+and thus the accuracy started to drop. This behaviour is shown in Figure \ref{fig:time_acc}. The reason why on $20\%$ the accuracy dropped and then raised again it could be related to the fact that a block of layers was partially frozen and then less consistent during the training \textit{i.e.} the entire block could be capable of learning a feature, but its knowledge came from the training on two different datasets.
 \par Finally the best model in terms of trade-off between accuracy, training time and number of trainable parameters had $30\%$ of frozen layers. In fact this would be the model of choice in case a researcher group wanted to expand the number of classes and wanted to have results as fast as possible without altering too much the accuracy.\par
 
 
 In order to improve the experiments the segmented images could be used as well, but in a parallel gated input so that the network could learn that the images without background contain just additional information about the original image and that they are not part of the original training dataset. In this way the model could reinforce the concepts learned but it could be less flexible if the secondary input layer is not designed carefully. \par
-An interesting evolution of the second experiment is the implementation of pruning strategies: in this way it would be possible to find an optimal network that can be deployed in smaller devices and have advantages in terms of time of inference.
+An interesting evolution of the second experiment is the implementation of pruning strategies: in this way it would be possible to find an optimal network that can be deployed in smaller devices and have advantages in terms of time of inferece.
 
 
 
 \section{Conclusions}
 This work proved that images similar to each other belonging to a large number of classes was possible even with a small dataset; this result was achieved thanks to \textit{Transfer Learning} and \textit{Data Augmentation} techniques, that allowed the models to preserve, fine-tune concepts learned on other datasets and made the network not overfitting due to data scarcity. \par
-Even shallow model could reach high accuracy on a dataset six time larger than the one used for training and more complex ones could almost reach $95\%$ in accuracy. The use of automatic procedures, like the cyclical learning rate, sped up the search for an optimal solution in the space of hyper-parameters, but the human intervention was still needed when it came to make high level choices.\par
+Even shallow model could reach high accuracy on a dataset six time larger than the one used for training and more complex ones could almost reach $95\%$ in accuracy. The use of automatic procedures, like the cyclical learning rate, speeded up the search for an optimal solution in the space of hyper-parameters, but the human intervention was still needed when it came to make high level choices.\par
 Finally, the techniques
 adopted and the architectures employed proved to be correct to respond
 to the initial question, that is to find solutions capable of classifying
@@ -437,7 +437,7 @@ correctly a large number of types of flowers starting from a small dataset.
 
 \newpage
 \appendix
-\section{Experimental results}\label{sec:app}
+\section{Exerimental results}\label{sec:app}
 
 \begin{figure}[ht!]
     \centering
@@ -458,13 +458,13 @@ correctly a large number of types of flowers starting from a small dataset.
 \hline
 \multicolumn{4}{|c|}{\textbf{ResNet-18}}                                          \\ \hline
 \multicolumn{1}{|c|}{\textbf{Optimizer}}    & \multicolumn{1}{c|}{\textbf{Scheduler}}           & \multicolumn{1}{c|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular}}  & \multicolumn{1}{c|}{2}                  &  76.17\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  76.17\%                \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 75.25\% \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 75.99\% \\ \cline{2-4} 
 \multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  26.52\%               \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 50.80\% \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 66.41\% \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{\textbf{Adam}}} & \multicolumn{1}{c|}{\multirow{3}{*}{\textbf{Triangular}}}  & \multicolumn{1}{c|}{\textbf{2}}                  & \textbf{87.64\%}       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{\multirow{6}{*}{\textbf{Adam}}} & \multicolumn{1}{c|}{\multirow{3}{*}{\textbf{Traingular}}}  & \multicolumn{1}{c|}{\textbf{2}}                  & \textbf{87.64\%}       \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 86.77\% \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 85.98\% \\ \cline{2-4} 
 \multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 82.48\%                \\ \cline{3-4} 
@@ -482,15 +482,15 @@ correctly a large number of types of flowers starting from a small dataset.
 \label{tab:inception}
 \begin{tabular}{|ccll|}
 \hline
-\multicolumn{4}{|c|}{\textbf{InceptionV3}}                                          \\ \hline
+\multicolumn{4}{|c|}{\textbf{IneptionV3}}                                          \\ \hline
 \multicolumn{1}{|c|}{\textbf{Optimizer}}    & \multicolumn{1}{c|}{\textbf{Scheduler}}           & \multicolumn{1}{c|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular}}  & \multicolumn{1}{c|}{2}                  &  89.98\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  89.98\%                \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 89.05\% \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 89.78\% \\ \cline{2-4} 
 \multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  87.68\%               \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 88.80\% \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 89.66\% \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{\textbf{Adam}}} & \multicolumn{1}{c|}{\multirow{3}{*}{\textbf{Triangular}}}  & \multicolumn{1}{c|}{\textbf{2}}                  & \textbf{91.96\%}       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{\multirow{6}{*}{\textbf{Adam}}} & \multicolumn{1}{c|}{\multirow{3}{*}{\textbf{Traingular}}}  & \multicolumn{1}{c|}{\textbf{2}}                  & \textbf{91.96\%}       \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 91.28\% \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 90.65\% \\ \cline{2-4} 
 \multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 89.83\%                \\ \cline{3-4} 
@@ -509,13 +509,13 @@ correctly a large number of types of flowers starting from a small dataset.
 \hline
 \multicolumn{4}{|c|}{\textbf{EfficientNetB4}}                                          \\ \hline
 \multicolumn{1}{|c|}{\textbf{Optimizer}}    & \multicolumn{1}{c|}{\textbf{Scheduler}}           & \multicolumn{1}{c|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular}}  & \multicolumn{1}{c|}{2}                  &  91.98\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  91.98\%                \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 91.74\% \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 91.54\% \\ \cline{2-4} 
 \multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  53.11\%               \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 73.71\% \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 86.89\% \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{\textbf{Adam}}} & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular}}  & \multicolumn{1}{c|}{2}                  & 92.01\%       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{\multirow{6}{*}{\textbf{Adam}}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  & 92.01\%       \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 93.88\% \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 83.37\% \\ \cline{2-4} 
 \multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{\textbf{Triangular2}}} & \multicolumn{1}{c|}{2}                  & 93.93\%                \\ \cline{3-4} 

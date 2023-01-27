@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.7.15)  27 JAN 2023 17:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.7.15)  27 JAN 2023 19:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -623,47 +623,47 @@ File: uni-32.def 2013/05/13 UCS: Unicode data U+2000..U+20FF
 <images/lr_adam.png, id=41, 462.528pt x 346.896pt>
 File: images/lr_adam.png Graphic file (type png)
 <use images/lr_adam.png>
-Package pdftex.def Info: images/lr_adam.png  used on input line 213.
+Package pdftex.def Info: images/lr_adam.png  used on input line 212.
 (pdftex.def)             Requested size: 272.99881pt x 204.75684pt.
  [4]
 <images/triangular.png, id=45, 862.1811pt x 448.074pt>
 File: images/triangular.png Graphic file (type png)
 <use images/triangular.png>
-Package pdftex.def Info: images/triangular.png  used on input line 225.
+Package pdftex.def Info: images/triangular.png  used on input line 223.
 (pdftex.def)             Requested size: 312.00119pt x 162.14746pt.
  [5 <./images/lr_adam.png> <./images/triangular.png>]
 <images/architecture.png, id=52, 1608.0075pt x 246.9225pt>
 File: images/architecture.png Graphic file (type png)
 <use images/architecture.png>
-Package pdftex.def Info: images/architecture.png  used on input line 243.
+Package pdftex.def Info: images/architecture.png  used on input line 241.
 (pdftex.def)             Requested size: 390.0pt x 59.88428pt.
  [6 <./images/architecture.png>]
 [7]
 <images/grad_multi.png, id=60, 1430.2233pt x 435.7881pt>
 File: images/grad_multi.png Graphic file (type png)
 <use images/grad_multi.png>
-Package pdftex.def Info: images/grad_multi.png  used on input line 295.
+Package pdftex.def Info: images/grad_multi.png  used on input line 293.
 (pdftex.def)             Requested size: 390.0pt x 118.82803pt.
 <images/sal3.png, id=61, 756.6669pt x 296.307pt>
 File: images/sal3.png Graphic file (type png)
 <use images/sal3.png>
-Package pdftex.def Info: images/sal3.png  used on input line 309.
+Package pdftex.def Info: images/sal3.png  used on input line 307.
 (pdftex.def)             Requested size: 390.0pt x 152.71962pt.
  [8 <./images/grad_multi.png>] [9 <./images/sal3.png>]
 <images/cm.png, id=70, 1114.76476pt x 957.5775pt>
 File: images/cm.png Graphic file (type png)
 <use images/cm.png>
-Package pdftex.def Info: images/cm.png  used on input line 363.
+Package pdftex.def Info: images/cm.png  used on input line 361.
 (pdftex.def)             Requested size: 390.0pt x 335.01103pt.
 <images/param_acc.png, id=71, 443.0151pt x 306.4248pt>
 File: images/param_acc.png Graphic file (type png)
 <use images/param_acc.png>
-Package pdftex.def Info: images/param_acc.png  used on input line 376.
+Package pdftex.def Info: images/param_acc.png  used on input line 374.
 (pdftex.def)             Requested size: 187.19833pt x 129.48303pt.
 <images/time_acc.png, id=72, 447.3513pt x 299.1978pt>
 File: images/time_acc.png Graphic file (type png)
 <use images/time_acc.png>
-Package pdftex.def Info: images/time_acc.png  used on input line 377.
+Package pdftex.def Info: images/time_acc.png  used on input line 375.
 (pdftex.def)             Requested size: 187.19833pt x 125.2011pt.
  [10] [11 <./images/cm.png>] [12 <./images/param_acc.png> <./images/time_acc.pn
 g>] [13]
@@ -671,22 +671,22 @@ g>] [13]
 <images/resnet.png, id=95, 396.7623pt x 314.3745pt>
 File: images/resnet.png Graphic file (type png)
 <use images/resnet.png>
-Package pdftex.def Info: images/resnet.png  used on input line 446.
+Package pdftex.def Info: images/resnet.png  used on input line 444.
 (pdftex.def)             Requested size: 187.19833pt x 148.32686pt.
 <images/inception.png, id=96, 396.7623pt x 314.3745pt>
 File: images/inception.png Graphic file (type png)
 <use images/inception.png>
-Package pdftex.def Info: images/inception.png  used on input line 447.
+Package pdftex.def Info: images/inception.png  used on input line 445.
 (pdftex.def)             Requested size: 187.19833pt x 148.32686pt.
 <images/efficient.png, id=97, 396.7623pt x 314.3745pt>
 File: images/efficient.png Graphic file (type png)
 <use images/efficient.png>
-Package pdftex.def Info: images/efficient.png  used on input line 448.
+Package pdftex.def Info: images/efficient.png  used on input line 446.
 (pdftex.def)             Requested size: 187.19833pt x 148.32686pt.
 <images/frozen.png, id=98, 396.7623pt x 314.3745pt>
 File: images/frozen.png Graphic file (type png)
 <use images/frozen.png>
-Package pdftex.def Info: images/frozen.png  used on input line 449.
+Package pdftex.def Info: images/frozen.png  used on input line 447.
 (pdftex.def)             Requested size: 187.19833pt x 148.32686pt.
  [16 <./images/resnet.png> <./images/inception.png> <./images/efficient.png> <.
 /images/frozen.png>] [17] [18]
@@ -702,7 +702,7 @@ Here is how much of TeX's memory you used:
  30442 multiletter control sequences out of 15000+600000
  541506 words of font info for 56 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
- 68i,12n,96p,796b,592s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 68i,12n,96p,805b,592s stack positions out of 5000i,500n,10000p,200000b,80000s
  </home/firaja/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1200.60
 0pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/sh
@@ -716,7 +716,7 @@ nts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type
 nts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10
 .pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on ProjectTemplate.pdf (20 pages, 3863941 bytes).
+Output written on ProjectTemplate.pdf (20 pages, 3864304 bytes).
 PDF statistics:
  159 PDF objects out of 1000 (max. 8388607)
  93 compressed objects within 1 object stream
