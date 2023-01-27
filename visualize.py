@@ -164,7 +164,7 @@ if __name__ == '__main__':
 	
 	test_preprocessed  = p.from_folder('./image')
 
-	image, label = test_preprocessed.__getitem__(3)
+	image, label = test_preprocessed.__getitem__(0)
 
 	
 	img = image[0]
@@ -178,14 +178,13 @@ if __name__ == '__main__':
 	for i in indexes:
 		print('{}({}): {}'.format(utils.LABELS[i], i, predictions[i]))
 
+	# Grad-CAM computation
 	icam = GradCAM(model, np.argmax(predictions), None)
 	heatmap = icam.compute_heatmap(image)
 	heatmap = cv2.resize(heatmap, (target_size, target_size))
 
+	# Saliency Map computation
 	smap = SaliencyMap().get_saliency_map(model, tf.expand_dims(img, axis=0), np.argmax(predictions)) 
-
-	
-
 	(heatmap, output) = icam.overlay_heatmap(heatmap, img, 0.4)
 
 
@@ -204,6 +203,8 @@ if __name__ == '__main__':
 	fig.colorbar(i)
 	plt.show()
 
+
+	# Confusion Matrix
 	p = Processing(target_size=target_size,
                         batch_size=16,
                         config=config,

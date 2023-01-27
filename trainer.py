@@ -105,19 +105,7 @@ if __name__ == '__main__':
     train_preprocessed, validation_preprocessed, test_preprocessed  = p.get_dataset()
     train_cardinality, validation_cardinality = train_preprocessed.n, validation_preprocessed.n
 
-    counter = Counter(train_preprocessed.classes)
-    plt.plot(counter.keys(), counter.values(), 'crimson', linewidth=2.5, label='Training')
-    counter = Counter(validation_preprocessed.classes)
-    plt.plot(counter.keys(), counter.values(), 'b--', linewidth=2.5, label='Validation')
-    counter = Counter(test_preprocessed.classes)
-    plt.plot(counter.keys(), counter.values(), 'limegreen', linewidth=2.5, label='Test')
-    plt.legend(loc='best')
-    plt.xlabel('Class')
-    plt.ylabel('Number of samples')
-    plt.grid(which='major', linestyle=':')
-    plt.rcParams["figure.dpi"] = 800
-    print((statistics.mean(counter.values()), (statistics.stdev(counter.values()))))
-    
+        
     # Finalize the model
     model.compile(loss=config['training']['loss'], optimizer=optimizer, metrics=['acc'])
 
