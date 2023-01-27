@@ -73,6 +73,10 @@ python3 visualize.py
 
 The image must be store with the following pattern `./images/{class}/{image}.jpg`
 
+## Contributing
+
+The repository is hosted in Github https://github.com/firaja/aml
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
