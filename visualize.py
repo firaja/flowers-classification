@@ -134,8 +134,7 @@ def plot_cm(cm, zero_diagonal=False, labels=None, cmap=plt.cm.viridis):
 	res = ax.imshow(np.array(cm), cmap=cmap, interpolation='nearest')
 	width, height = cm.shape
 
-	#divider = make_axes_locatable(ax)
-	#cax = divider.append_axes("right", size="5%", pad=0.5)
+	
 	plt.colorbar(res)
 
 	plt.show()
@@ -153,8 +152,7 @@ if __name__ == '__main__':
 	class_model = models.Efficientnetb4(0.5)
 	model = class_model.get_model()
 	model.load_weights('output/checkpoints/{}-loss.h5'.format(type(class_model).__name__.lower()))
-	#model.layers[-1].activation = None
-	#model.summary()
+	
 	preprocessor = class_model.preprocess()
 
 	target_size = class_model.size
@@ -170,19 +168,10 @@ if __name__ == '__main__':
 
 	
 	img = image[0]
-	#img_path = utils.get_path('./image/81/image.jpg')
-	#image = cv2.imread(img_path)	
-	#image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-	#image = cv2.resize(image, (target_size, target_size))
-	#image = tf.expand_dims(image, axis=-1)
-	#image = tf.divide(image, 255)
-	#image = tf.reshape(image, [1, target_size, target_size, 3])
-
-
+	
 	top = 4
 	predictions = model.predict(image)[0]
-	#for i in range(len(predictions)):
-	#	print('{}({}): {}'.format(utils.LABELS[i], i+1, predictions[i]))
+	
 	indexes = np.argpartition(predictions, -top)[-top:]
 	indexes = indexes[np.argsort(predictions[indexes])]
 	print(indexes)
@@ -195,9 +184,7 @@ if __name__ == '__main__':
 
 	smap = SaliencyMap().get_saliency_map(model, tf.expand_dims(img, axis=0), np.argmax(predictions)) 
 
-	#image = cv2.imread(img_path)
-	#image = cv2.resize(image, (target_size, target_size))
-	#img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+	
 
 	(heatmap, output) = icam.overlay_heatmap(heatmap, img, 0.4)
 

@@ -67,7 +67,7 @@
 %----------------------------------------------------------------------------------------
 
 \HRule \\[0.4cm]
-{ \huge \bfseries Flowers recognition}\\[0.4cm] % Title of your document
+{ \huge \bfseries Classification of flower images starting from a small dataset}\\[0.4cm] % Title of your document
 \HRule \\[1.5cm]
  
 %----------------------------------------------------------------------------------------
@@ -235,7 +235,7 @@ the difference between the two is that the second method halves the upper bound 
 
 
 \subsection{Experiment 1: Choice of the architecture}\label{sec:exp1}
-The first experiment aimed to find the architecture that could achieve the best accuracy on the test set. This work tested \textit{ResNet18} \cite{he2015deep}, \textit{InceptionV3} \cite{szegedy2015going} and 
+The first experiment aimed to find the architecture that could achieve the best accuracy on the test set. This work tested \textit{ResNet-18} \cite{he2015deep}, \textit{InceptionV3} \cite{szegedy2015going} and 
 \textit{EfficientNetB4} \cite{tan2019efficientnet}. All of them presented diffent peculiarities and could be used for training with the available hardware. \par
 Since the training on \textit{ImageNet} of the networks is not sufficient to use them as feature extractors, these networks were fine-tuned in order to update their weights and to fit better the task.\par
 \begin{figure}[ht!]
@@ -383,12 +383,13 @@ It is immediately noticeable that EfficientNetB4 from the first experiment perfo
 
 
 \section{Discussion}
-Despite the shallowness of \textit{ResNet-18}, the model based on it performed with quite high accuracy ($\sim 88\%$) but it was predictably surpassed by the other two models. In particular EfficientNetB4, that performed better on \textit{ImageNet} \cite{tan2019efficientnet}, was more efficient than \textit{InceptionV3} in terms of accuracy and number of parameters. The main obstacle represented by a small dataset was overcome by data augmentation: all the models performed with an average of $+3\%$ in accuracy. The \textit{Transfer Learning} also played a fundamental role and  without it the model would had been less stable and the training would had required more time before reaching the same qualitative results.\par
+Despite the shallowness of \textit{ResNet-18}, the model based on it performed with quite high accuracy ($\sim 88\%$) but it was predictably surpassed by the other two models. In particular EfficientNetB4, that performed better on \textit{ImageNet} \cite{tan2019efficientnet}, was more efficient than \textit{InceptionV3} in terms of accuracy and number of parameters. The main obstacle represented by a small dataset was overcome by data augmentation: all the models performed with an average of $+3\%$ in accuracy thanks to this technique. The \textit{Transfer Learning} also played a fundamental role and  without it the model would had been less stable and the training would had required more time before reaching the same qualitative results.\par
 Figure \ref{fig:cm} shows that the model had more problems dealing with class 50 (\textit{Common Dandelion}) in the test dataset; this was the class with more samples and some images contained insects landed on the flower and in others the background covered more than half of the image. A strenght point of the model is that is able to recognize obstacles and foreign objects like in Figure \ref{fig:sal}, where the \textit{Saliency Map} shows that the gradient were smaller along the branch.
 \par
+Tables \ref{tab:resnet}, \ref{tab:inception} and \ref{tab:efficient} demonstrates how \textit{SGD} and in particular \textit{SGD} with \textit{Triangular2} performed worse than \textit{Adam}; this because \textit{Adam} was better in escaping saddle points thanks to its adaptive estimation of the momentum, although SGD is considered having better generalization perfomance \cite{Ashia}.\par
 In the second phase models with less frozen layers performed better as expected: the shallow layers contained generic knowledge learned from \textit{ImageNet}, like lines, basic shapes, \textit{etc.} and they were useful for this new task. As the number of frozen layers increased more complex concepts reamained stored in the network and they were less useful to the classifier
 and thus the accuracy started to drop. This behaviour is shown in Figure \ref{fig:time_acc}. The reason why on $20\%$ the accuracy dropped and then raised again it could be related to the fact that a block of layers was partially frozen and then less consistent during the training \textit{i.e.} the entire block could be capable of learning a feature, but a part of it learned from a dataset and the other from another.
-\par Finally the best model in terms of trade-off between accuracy, training time and number of trainable parameters had $30\%$ of frozen layers.\par
+\par Finally the best model in terms of trade-off between accuracy, training time and number of trainable parameters had $30\%$ of frozen layers. In fact this would be the model of choice in case a researcher group wanted to expand the number of classes and wanted to have results as fast as possible without altering too much the accuracy.\par
 
 
 In order to improve the experiments the segmented images could be used as well, but in a parallel gated input so that the network could learn that the images without background contain just additional information about the original image and that they are not part of the original training dataset. In this way the model could reinforce the concepts learned but it could be less flexible if the secondary input layer is not designed carefully. \par
@@ -398,7 +399,11 @@ An interesting evolution of the second experiment is the implementation of pruni
 
 \section{Conclusions}
 This work proved that images similar to each other belonging to a large number of classes was possible even with a small dataset; this result was achieved thanks to \textit{Transfer Learning} and \textit{Data Augmentation} techniques, that allowed the models to preserve, fine-tune concepts learned on other datasets and made the network not overfitting due to data scarcity. \par
-Even shallow model could reach high accuracy on a dataset six time larger than the one used for training and more complex ones could almost reach $95\%$ in accuracy. The use of automatic procedures, like the cyclical learning rate, speeded up the search for an optimal solution in the space of hyper-parameters, but the human intervention was still needed when it came to make high level choices.
+Even shallow model could reach high accuracy on a dataset six time larger than the one used for training and more complex ones could almost reach $95\%$ in accuracy. The use of automatic procedures, like the cyclical learning rate, speeded up the search for an optimal solution in the space of hyper-parameters, but the human intervention was still needed when it came to make high level choices.\par
+Finally, the techniques
+adopted and the architectures employed proved to be correct to respond
+to the initial question, that is to find solutions capable of classifying
+correctly a large number of types of flowers starting from a small dataset.
 
 
 \bibliographystyle{IEEEtran}
@@ -418,7 +423,7 @@ Even shallow model could reach high accuracy on a dataset six time larger than t
 \begin{table}[ht!]
 \centering
 \caption{}
-\label{tab:my-table}
+\label{tab:resnet}
 \begin{tabular}{|ccll|}
 \hline
 \multicolumn{4}{|c|}{\textbf{ResNet-18}}                                          \\ \hline
@@ -444,23 +449,23 @@ Even shallow model could reach high accuracy on a dataset six time larger than t
 \begin{table}[ht!]
 \centering
 \caption{}
-\label{tab:my-table}
+\label{tab:inception}
 \begin{tabular}{|ccll|}
 \hline
 \multicolumn{4}{|c|}{\textbf{IneptionV3}}                                          \\ \hline
 \multicolumn{1}{|c|}{\textbf{Optimizer}}    & \multicolumn{1}{c|}{\textbf{Scheduler}}           & \multicolumn{1}{c|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  76.27\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 75.28\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 76.04\% \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  26.63\%               \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 50.77\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 66.38\% \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  & \textbf{86.39\%}       \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 85.78\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 85.65\% \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 82.48\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 84.85\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 84.72\% \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  89.94\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 89.10\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 89.81\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  87.65\%               \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 88.85\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 89.65\% \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  & \textbf{91.96\%}       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 91.08\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 90.63\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 89.73\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 90.73\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 90.29\% \\ \hline
 \end{tabular}
 \end{table}
 
@@ -469,23 +474,23 @@ Even shallow model could reach high accuracy on a dataset six time larger than t
 \begin{table}[ht!]
 \centering
 \caption{}
-\label{tab:my-table}
+\label{tab:efficient}
 \begin{tabular}{|ccll|}
 \hline
 \multicolumn{4}{|c|}{\textbf{EfficientNetB4}}                                          \\ \hline
 \multicolumn{1}{|c|}{\textbf{Optimizer}}    & \multicolumn{1}{c|}{\textbf{Scheduler}}           & \multicolumn{1}{c|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  76.27\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 75.28\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 76.04\% \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  26.63\%               \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 50.77\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 66.38\% \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  & \textbf{86.39\%}       \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 85.78\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 85.65\% \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 82.48\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 84.85\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 84.72\% \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  91.98\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 91.73\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 91.64\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  53.16\%               \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 73.71\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 86.92\% \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  & 91.95\%       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 93.86\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 83.29\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 93.92\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & \textbf{94.89\%} \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 92.93\% \\ \hline
 \end{tabular}
 \end{table}
 

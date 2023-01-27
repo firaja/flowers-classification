@@ -78,4 +78,11 @@ S.~V. Stehman, ``Selecting and interpreting measures of thematic classification
   \url{https://doi.org/10.1016/s0034-4257(97)00083-7}
 \BIBentrySTDinterwordspacing
 
+\bibitem{Ashia}
+\BIBentryALTinterwordspacing
+A.~C. Wilson, R.~Roelofs, M.~Stern, N.~Srebro, and B.~Recht, ``The marginal
+  value of adaptive gradient methods in machine learning,'' 2017. [Online].
+  Available: \url{https://arxiv.org/abs/1705.08292}
+\BIBentrySTDinterwordspacing
+
 \end{thebibliography}
