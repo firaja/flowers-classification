@@ -44,14 +44,16 @@ OPTIMIZERS = {
 
 
 def last_conv(model):
-    """Finds the last convolutional layer of a Keras model"""
+    """Finds the last convolutional layer of a Keras model
+    """
     return list(filter(lambda x: isinstance(x, Conv2D), model.layers))[-1].name
     
 
 
 
 class Efficientnetb4:
-    """Class representing EfficientNetB4"""
+    """Class representing EfficientNetB4
+    """
 
     size = 224
 
@@ -81,7 +83,8 @@ class Efficientnetb4:
 
 
 class FrozenEfficientnetb4:
-    """Class representing EfficientNetB4 with a custom percentage of layers frozen"""
+    """Class representing EfficientNetB4 with a custom percentage of layers frozen
+    """
 
     size = 224
 
@@ -117,7 +120,8 @@ class FrozenEfficientnetb4:
     
 
 class Resnet18:
-    """Class representing ResNet-18"""
+    """Class representing ResNet-18
+    """
 
     size = 224
 
@@ -146,7 +150,8 @@ class Resnet18:
 
 
 class Inceptionv3:
-    """Class representing InceptionV3"""
+    """Class representing InceptionV3
+    """
 
     size = 299
 

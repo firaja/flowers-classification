@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+
+"""processing.py: Implementation of the Cyclical Learning Rate Finder algorithm."""
+__author__      = "David Bertoldi"
+__email__       = "d.bertoldi@campus.unimib.it"
+
 import utils
 import tensorflow as tf
 import tensorflow_datasets as tfds
@@ -28,6 +34,8 @@ class Processing:
 
 
     def get_dataset(self):
+        """ Loads train, validation and test datasets. Only on the training datasets are applied transformations
+        """
         train_generator = self.train_datagen.flow_from_directory(directory=self.config['paths']['data']['training'],
                                                             batch_size=self.batch_size,
                                                             shuffle=True,
@@ -51,6 +59,8 @@ class Processing:
         return train_generator, valid_generator, test_generator
 
     def from_folder(self, path):
+        """ Loads images from a folder without transformations
+        """
         return self.test_datagen.flow_from_directory(directory=path,
                                                             batch_size=self.batch_size,
                                                             shuffle=False,

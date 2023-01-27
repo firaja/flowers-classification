@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+
+"""visualize.py: Implementation of Grad-CAM and Saliency Map."""
+__author__      = "David Bertoldi"
+__email__       = "d.bertoldi@campus.unimib.it"
+
 import argparse
 import utils
 import models
@@ -54,6 +60,7 @@ class GradCAM:
 			
 			loss = predictions[:, tf.argmax(predictions[0])]
 	
+			# Get the gradients of the loss w.r.t to the input image
 			grads = tape.gradient(loss, convOutputs)
 
 			castConvOutputs = tf.cast(convOutputs > 0, "float32")
@@ -62,6 +69,7 @@ class GradCAM:
 			convOutputs = convOutputs[0]
 			guidedGrads = guidedGrads[0]
 
+			# take average across channels
 			weights = tf.reduce_mean(guidedGrads, axis=(0, 1))
 			cam = tf.reduce_sum(tf.multiply(weights, convOutputs), axis=-1)
 
@@ -79,8 +87,7 @@ class GradCAM:
 		
 		jet_heatmap = np.uint8(cm.jet(heatmap)[..., :3] * 255)
 		image = np.uint8(image)
-		print(image.shape)
-		print(jet_heatmap.shape)
+		
 		output = cv2.addWeighted(image, alpha, jet_heatmap, 1 - alpha, 0)
 		return (jet_heatmap, output)
 
@@ -147,8 +154,7 @@ if __name__ == '__main__':
 	decode_predictions = keras.applications.xception.decode_predictions
 
 
-	
-
+	# Choose model
 	class_model = models.Efficientnetb4(0.5)
 	model = class_model.get_model()
 	model.load_weights('output/checkpoints/{}-loss.h5'.format(type(class_model).__name__.lower()))
@@ -157,24 +163,23 @@ if __name__ == '__main__':
 
 	target_size = class_model.size
 
+	# Load image
 	p = Processing(target_size=target_size,
                         batch_size=1,
                         config=config,
                         preprocessor=preprocessor)
 	
 	test_preprocessed  = p.from_folder('./image')
-
 	image, label = test_preprocessed.__getitem__(0)
 
 	
 	img = image[0]
 	
+	# Print top 4 predictions
 	top = 4
 	predictions = model.predict(image)[0]
-	
 	indexes = np.argpartition(predictions, -top)[-top:]
 	indexes = indexes[np.argsort(predictions[indexes])]
-	print(indexes)
 	for i in indexes:
 		print('{}({}): {}'.format(utils.LABELS[i], i, predictions[i]))
 
@@ -187,16 +192,15 @@ if __name__ == '__main__':
 	smap = SaliencyMap().get_saliency_map(model, tf.expand_dims(img, axis=0), np.argmax(predictions)) 
 	(heatmap, output) = icam.overlay_heatmap(heatmap, img, 0.4)
 
-
+	# Plot of Grad-CAM
 	fig, ax = plt.subplots(1, 3)
 	fig.set_size_inches(20,20)
-
 	ax[0].imshow(heatmap)
 	ax[1].imshow(np.uint8(img))
 	ax[2].imshow(output)
 	plt.show()
 
-
+	# Plot of Saliency Map
 	fig, axes = plt.subplots(1,2,figsize=(14,5))
 	axes[0].imshow(np.uint8(img))
 	i = axes[1].imshow(smap, alpha=1.0, cmap='jet')

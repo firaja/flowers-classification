@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+
+"""utils.py: generic utilities."""
+__author__      = "David Bertoldi"
+__email__       = "d.bertoldi@campus.unimib.it"
+
 import os
 import yaml
 

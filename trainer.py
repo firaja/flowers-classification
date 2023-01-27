@@ -28,7 +28,7 @@ np.random.seed(42)
 tf.random.set_seed(42)
     
 
-
+# exp was not used for this work
 CLRS = ['triangular', 'triangular2', 'exp']
 
 
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     for gpu in gpus:
         tf.config.experimental.set_memory_growth(gpu, True)
 
-    # Enable 16bit operations
+    # Enable 16bit operations for larger models
     if args.mp:
         policy = tf.keras.mixed_precision.Policy('mixed_float16')
         tf.keras.mixed_precision.set_global_policy(policy)
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     train_preprocessed, validation_preprocessed, test_preprocessed  = p.get_dataset()
     train_cardinality, validation_cardinality = train_preprocessed.n, validation_preprocessed.n
 
-        
+
     # Finalize the model
     model.compile(loss=config['training']['loss'], optimizer=optimizer, metrics=['acc'])
 
@@ -190,7 +190,7 @@ if __name__ == '__main__':
     print('Best loss model: {}'.format(loss))
 
 
-    # Save results
+    # Save the results log
     with open('results.txt', 'a') as f:
         f.write('accuracy\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(args.arch, args.batch, args.step, args.opt, args.clr, accuracy))
         f.write('loss\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(args.arch, args.batch, args.step, args.opt, args.clr, loss))
