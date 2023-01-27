@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.7.15)  27 JAN 2023 15:04
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2022.7.15)  27 JAN 2023 17:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -666,17 +666,40 @@ File: images/time_acc.png Graphic file (type png)
 Package pdftex.def Info: images/time_acc.png  used on input line 377.
 (pdftex.def)             Requested size: 187.19833pt x 125.2011pt.
  [10] [11 <./images/cm.png>] [12 <./images/param_acc.png> <./images/time_acc.pn
-g>]
-(./ProjectTemplate.bbl [13]) [14] [15] [16] (./ProjectTemplate.aux)
+g>] [13]
+(./ProjectTemplate.bbl [14]) [15]
+<images/resnet.png, id=95, 396.7623pt x 314.3745pt>
+File: images/resnet.png Graphic file (type png)
+<use images/resnet.png>
+Package pdftex.def Info: images/resnet.png  used on input line 446.
+(pdftex.def)             Requested size: 187.19833pt x 148.32686pt.
+<images/inception.png, id=96, 396.7623pt x 314.3745pt>
+File: images/inception.png Graphic file (type png)
+<use images/inception.png>
+Package pdftex.def Info: images/inception.png  used on input line 447.
+(pdftex.def)             Requested size: 187.19833pt x 148.32686pt.
+<images/efficient.png, id=97, 396.7623pt x 314.3745pt>
+File: images/efficient.png Graphic file (type png)
+<use images/efficient.png>
+Package pdftex.def Info: images/efficient.png  used on input line 448.
+(pdftex.def)             Requested size: 187.19833pt x 148.32686pt.
+<images/frozen.png, id=98, 396.7623pt x 314.3745pt>
+File: images/frozen.png Graphic file (type png)
+<use images/frozen.png>
+Package pdftex.def Info: images/frozen.png  used on input line 449.
+(pdftex.def)             Requested size: 187.19833pt x 148.32686pt.
+ [16 <./images/resnet.png> <./images/inception.png> <./images/efficient.png> <.
+/images/frozen.png>] [17] [18]
+(./ProjectTemplate.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 15699 strings out of 483099
- 300089 string characters out of 5964234
- 535937 words of memory out of 5000000
- 30420 multiletter control sequences out of 15000+600000
+ 15725 strings out of 483099
+ 300602 string characters out of 5964234
+ 536956 words of memory out of 5000000
+ 30442 multiletter control sequences out of 15000+600000
  541506 words of font info for 56 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  68i,12n,96p,796b,592s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -693,10 +716,10 @@ nts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type
 nts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10
 .pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on ProjectTemplate.pdf (18 pages, 3781722 bytes).
+Output written on ProjectTemplate.pdf (20 pages, 3863941 bytes).
 PDF statistics:
- 144 PDF objects out of 1000 (max. 8388607)
- 88 compressed objects within 1 object stream
+ 159 PDF objects out of 1000 (max. 8388607)
+ 93 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 68 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 88 words of extra memory for PDF output out of 10000 (max. 10000000)
 

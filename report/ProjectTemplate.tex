@@ -42,7 +42,7 @@
 \usepackage{bigstrut}
 \usepackage{subfigure}
 \usepackage{caption} 
-\captionsetup[table]{skip=8pt}
+\captionsetup[table]{skip=6pt}
 
 
 
@@ -350,7 +350,7 @@ Table \ref{tab:res} shows the configuration that gave the best results for
 \hline
 \textbf{Archtecture} & \textbf{Batch size} & \textbf{Optimizer} & \textbf{Learning rate} & \textbf{Scheduler} & \textbf{Step size} & \textbf{Test accuracy} \\ \hline
 ResNet-18      & 64 & Adam & $[10^{-5}, 10^{-3}]$ & Triangular  & 2 & 87.64\% \\ \hline
-InceptionV3    & 64 & Adam & $[10^{-4}, 10^{-2}]$ & Triangular  & 2 & 91.86\% \\ \hline
+InceptionV3    & 64 & Adam & $[10^{-4}, 10^{-2}]$ & Triangular  & 2 & 91.96\% \\ \hline
 EfficientNetB4 & 16 & Adam & $[10^{-5}, 10^{-3}]$ & Triangualr2 & 4 & 94.89\% \\ \hline
 \end{tabular}%
 }
@@ -368,7 +368,7 @@ Appendix \ref{sec:app} shows in tabular form all the results from the 12 trainin
 \subsection{Experiment 2}\label{sec:exp2}
 
 
-It is immediately noticeable that EfficientNetB4 from the first experiment performed better than the other models and for this reason it was chosen for the second experiment. Figure \ref{fig:time_acc}a compares the accuracy on the test dataset and the number of trainable parameters as the number of frozen layers increased. Figure \ref{fig:time_acc}b compares accuracy and training time with respect to the number of frozen layers. 
+It is immediately noticeable that EfficientNetB4 from the first experiment performed better than the other models and for this reason it was chosen for the second experiment. Figure \ref{fig:time_acc}a compares the accuracy on the test dataset and the number of trainable parameters as the number of frozen layers increased. Figure \ref{fig:time_acc}b compares accuracy and training time with respect to the number of frozen layers. Table \ref{tab:frozen} shows the data in tabular form.
 
 
 \begin{figure}
@@ -378,6 +378,28 @@ It is immediately noticeable that EfficientNetB4 from the first experiment perfo
     \caption{Plot of the accuracy compared to the number of trainable parameters (a) and compared to training time (b) as the number of frozen layers varies}
     \label{fig:time_acc}
 \end{figure}
+
+\begin{table}[ht!]
+\centering
+\caption{\textit{EfficientNetB4}: Comparisong between accuracy, trainable parameters and training time as the number of frozen layers increased }
+\label{tab:frozen}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Freeze Rate} & \textbf{Trainable Parameters} & \textbf{Accuracy} & \textbf{Training Time} \\ \hline
+10\%                 & 18,494,310                    & 94.11\%           & 760s                   \\ \hline
+20\%                 & 18,436,494                    & 92.25\%           & 625s                   \\ \hline
+30\%                 & 18,269,548                    & 93.43\%           & 604s                   \\ \hline
+40\%                 & 17,784,182                    & 93.23\%           & 600s                   \\ \hline
+50\%                 & 17,115,458                    & 93.23\%           & 595s                   \\ \hline
+60\%                 & 15,942,038                    & 92.64\%           & 591s                   \\ \hline
+70\%                 & 14,702,558                    & 92.94\%           & 584s                   \\ \hline
+80\%                 & 11,329,546                    & 91.96\%           & 580s                   \\ \hline
+90\%                 & 7,407,102                     & 91.27\%           & 576s                   \\ \hline
+100\%                & 971,366                       & 82.05\%           & 565s                   \\ \hline
+\end{tabular}%
+}
+\end{table}
 
 
 
@@ -419,27 +441,37 @@ correctly a large number of types of flowers starting from a small dataset.
 \appendix
 \section{Exerimental results}\label{sec:app}
 
+\begin{figure}[ht!]
+    \centering
+    \subfigure[]{\includegraphics[width=0.48\textwidth]{images/resnet.png}} 
+    \subfigure[]{\includegraphics[width=0.48\textwidth]{images/inception.png}} 
+    \subfigure[]{\includegraphics[width=0.48\textwidth]{images/efficient.png}} 
+    \subfigure[]{\includegraphics[width=0.48\textwidth]{images/frozen.png}} 
+    \caption{Plot of the accuracy achieved by the models during the training phase: (a) \textit{ResNet-18}, (b) \textit{InceptionV3}, (c) \textit{EfficientNetB4} and (d) \textit{EfficientNetB4} with $30\%$ of untrained layers}
+    \label{fig:asd}
+\end{figure}
+
 
 \begin{table}[ht!]
 \centering
-\caption{}
+\caption{Results of the fine-tuning of \textit{ResNet-18}}
 \label{tab:resnet}
 \begin{tabular}{|ccll|}
 \hline
 \multicolumn{4}{|c|}{\textbf{ResNet-18}}                                          \\ \hline
 \multicolumn{1}{|c|}{\textbf{Optimizer}}    & \multicolumn{1}{c|}{\textbf{Scheduler}}           & \multicolumn{1}{c|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  76.27\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 75.28\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 76.04\% \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  26.63\%               \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 50.77\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 66.38\% \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  & \textbf{86.39\%}       \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 85.78\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 85.65\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  76.17\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 75.25\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 75.99\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  26.52\%               \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 50.80\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 66.41\% \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{\textbf{Adam}}} & \multicolumn{1}{c|}{\multirow{3}{*}{\textbf{Traingular}}}  & \multicolumn{1}{c|}{\textbf{2}}                  & \textbf{87.64\%}       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 86.77\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 85.98\% \\ \cline{2-4} 
 \multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 82.48\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 84.85\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 84.72\% \\ \hline
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 84.80\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 84.71\% \\ \hline
 \end{tabular}
 \end{table}
 
@@ -448,24 +480,24 @@ correctly a large number of types of flowers starting from a small dataset.
 
 \begin{table}[ht!]
 \centering
-\caption{}
+\caption{Results of the fine-tuning of \textit{InceptionV3}}
 \label{tab:inception}
 \begin{tabular}{|ccll|}
 \hline
 \multicolumn{4}{|c|}{\textbf{IneptionV3}}                                          \\ \hline
 \multicolumn{1}{|c|}{\textbf{Optimizer}}    & \multicolumn{1}{c|}{\textbf{Scheduler}}           & \multicolumn{1}{c|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  89.94\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 89.10\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 89.81\% \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  87.65\%               \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 88.85\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 89.65\% \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  & \textbf{91.96\%}       \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 91.08\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 90.63\% \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 89.73\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 90.73\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 90.29\% \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  89.98\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 89.05\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 89.78\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  87.68\%               \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 88.80\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 89.66\% \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{\textbf{Adam}}} & \multicolumn{1}{c|}{\multirow{3}{*}{\textbf{Traingular}}}  & \multicolumn{1}{c|}{\textbf{2}}                  & \textbf{91.96\%}       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 91.28\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 90.65\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 89.83\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 90.23\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 90.79\% \\ \hline
 \end{tabular}
 \end{table}
 
@@ -473,26 +505,29 @@ correctly a large number of types of flowers starting from a small dataset.
 
 \begin{table}[ht!]
 \centering
-\caption{}
+\caption{Results of the fine-tuning of \textit{EfficientNetB4}}
 \label{tab:efficient}
 \begin{tabular}{|ccll|}
 \hline
 \multicolumn{4}{|c|}{\textbf{EfficientNetB4}}                                          \\ \hline
 \multicolumn{1}{|c|}{\textbf{Optimizer}}    & \multicolumn{1}{c|}{\textbf{Scheduler}}           & \multicolumn{1}{c|}{\textbf{Step size}} & \textbf{Test accuracy} \\ \hline
 \multicolumn{1}{|c|}{\multirow{6}{*}{SGD}}  & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  &  91.98\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 91.73\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 91.64\% \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  53.16\%               \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 91.74\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 91.54\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  &  53.11\%               \\ \cline{3-4} 
 \multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 73.71\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 86.92\% \\ \hline
-\multicolumn{1}{|c|}{\multirow{6}{*}{Adam}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  & 91.95\%       \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 93.86\% \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 83.29\% \\ \cline{2-4} 
-\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{Triangular2}} & \multicolumn{1}{c|}{2}                  & 93.92\%                \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & \textbf{94.89\%} \\ \cline{3-4} 
-\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 92.93\% \\ \hline
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 86.89\% \\ \hline
+\multicolumn{1}{|c|}{\multirow{6}{*}{\textbf{Adam}}} & \multicolumn{1}{c|}{\multirow{3}{*}{Traingular}}  & \multicolumn{1}{c|}{2}                  & 92.01\%       \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{4} & 93.88\% \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 83.37\% \\ \cline{2-4} 
+\multicolumn{1}{|c|}{}                      & \multicolumn{1}{c|}{\multirow{3}{*}{\textbf{Triangular2}}} & \multicolumn{1}{c|}{2}                  & 93.93\%                \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{\textbf{4}} & \textbf{94.89\%} \\ \cline{3-4} 
+\multicolumn{1}{|c|}{} & \multicolumn{1}{c|}{} & \multicolumn{1}{c|}{8} & 92.95\% \\ \hline
 \end{tabular}
 \end{table}
+
+
+
 
 
 \end{document}
