@@ -1,6 +1,5 @@
 # Classification of flower images starting from a small dataset
 
-Foobar is a Python library for dealing with word pluralization.
 
 ## Installation
 Python3 is required alogn with cudnna and CUDA Toolkit.
