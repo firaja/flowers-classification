@@ -1,6 +1,6 @@
 # Classification of flower images starting from a small dataset
 
-
+![report/images/sal3.png](report/images/sal3.png)
 ## Installation
 Python3 is required alogn with cudnna and CUDA Toolkit.
 
